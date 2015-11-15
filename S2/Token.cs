@@ -10,8 +10,8 @@ namespace S2
 	{
 		public enum TokenType { UP, DOWN, LEFT, RIGHT, FORW, BACK, COLOR, REP, NUMBER, HEX, QUOTE, DOT }
 
-		private TokenType type { public get; private set; }
-		private Object data { public get; private set; }
+		public TokenType type { get; private set; }
+		public Object data { get; private set; }
 
 		public Token(TokenType type, int data)
 		{
@@ -22,7 +22,7 @@ namespace S2
 		public Token(TokenType type)
 		{
 			this.type = type;
-			this.data = null;
+			data = null;
 		}
 	}
 }
