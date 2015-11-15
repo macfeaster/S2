@@ -29,6 +29,13 @@ namespace S2
 			return input.ToString();
 		}
 
+        /// <summary>
+        /// Parse an input string into a ListDictionary of Tokens.
+        /// </summary>
+        /// 
+        /// <param name="input">Code string to parse</param>
+        /// <returns>ListDictionary of parsed tokens, with line number as key, and
+        /// the Tokens that line contains in a List, as value.</returns>
 		public ListDictionary parse(string input)
 		{
             // Set up regex tools
@@ -43,6 +50,7 @@ namespace S2
 
 			foreach (Match m in matches)
 			{
+                // Match regex string pattern matches with their token equivalents
                 switch (m.Value)
 				{
 					case "DOWN":
@@ -86,15 +94,26 @@ namespace S2
                         int val;
                         if (int.TryParse(m.Value, out val))
                             tokens.Add(lineNum, new Token(TokenType.NUMBER, val));
+                        // A seven character string, starting with #, is a hex color code
+                        // match of our hex regex pattern
                         else if (m.Value.StartsWith("#") && m.Value.Length == 7)
                             tokens.Add(lineNum, new Token(TokenType.HEX, m.Value));
+                        // A matched value which is null or whitespace and is not null
+                        // is whitespace
                         else if (string.IsNullOrWhiteSpace(m.Value) && m.Value != null)
                             tokens.Add(lineNum, new Token(TokenType.WHITESPACE));
+                        // The matcher has encountered unknown data
                         else
                             throw new SyntaxError(lineNum);
                         break;
 				}
+
+                lexPos = m.Index;
 			}
+
+            // If there is still unparsed data, there is something illegal that cannot be lexed
+            if (lexPos != input.Length)
+                throw new SyntaxError(lineNum);
 
             return tokens;
 		}
