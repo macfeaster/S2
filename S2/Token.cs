@@ -8,7 +8,7 @@ namespace S2
 {
 	class Token
 	{
-		enum TokenType { UP, DOWN, LEFT, RIGHT, FORW, BACK, COLOR, REP, QUOTE, DOT }
+		public enum TokenType { UP, DOWN, LEFT, RIGHT, FORW, BACK, COLOR, REP, NUMBER, HEX, QUOTE, DOT }
 
 		private TokenType type { public get; private set; }
 		private Object data { public get; private set; }

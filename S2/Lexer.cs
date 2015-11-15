@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace S2
 {
 	class Lexer
 	{
-		public List<string> getInput()
+		List<Token> tokens = new List<Token>();
+
+		public string getInput()
 		{
-			List<string> input = new List<string>();
+			StringBuilder input = new StringBuilder();
 			string line;
 
 			while (!string.IsNullOrWhiteSpace(line = Console.ReadLine()))
@@ -22,10 +25,23 @@ namespace S2
 				else if (commentIndex == 0)
 					line = "";
 
-				input.Add(line);
+				input.Append(line);
 			}
 
-			return input;
+			return input.ToString();
+		}
+
+		public List<Token> parse(string input)
+		{
+			string pattern = "(DOWN|UP|FORW|BACK|LEFT|RIGHT|COLOR|REP|[0-9]+|[.]|\"|[#][0-9A-F]{6}|\n)";
+			Regex r = new Regex(pattern);
+
+			MatchCollection matches = r.Matches(input);
+
+			foreach (Match m in matches)
+			{
+
+			}
 		}
 	}
 }
