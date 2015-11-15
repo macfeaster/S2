@@ -23,67 +23,80 @@ namespace S2
 				else if (commentIndex == 0)
 					line = "";
 
-				input.Append(line);
+				input.Append(line.ToUpper());
 			}
 
 			return input.ToString();
 		}
 
-		public List<Token> parse(string input)
+		public ListDictionary parse(string input)
 		{
             // Set up regex tools
-			string pattern = @"(DOWN|UP|FORW|BACK|LEFT|RIGHT|COLOR|REP|[0-9]+|[.]|""|[#][0-9A-F]{6}|\n)";
-			Regex r = new Regex(pattern);
-			MatchCollection matches = r.Matches(input);
+			var pattern = @"(DOWN|UP|FORW|BACK|LEFT|RIGHT|COLOR|REP|[0-9]+|[.]|""|[#][0-9A-F]{6}|\s|\n)";
+			var r = new Regex(pattern);
+			var matches = r.Matches(input);
 
             // Parsed tokens are placed in a list, lineCount keeps track of which line errors occur on
-    		List<Token> tokens = new List<Token>();
-			int lineCount = 0;
+            var tokens = new ListDictionary();
+			int lineNum = 0;
+            int lexPos = 0;
 
 			foreach (Match m in matches)
 			{
                 switch (m.Value)
 				{
 					case "DOWN":
-						tokens.Add(new Token(TokenType.DOWN));
+						tokens.Add(lineNum, new Token(TokenType.DOWN));
 						break;
 					case "UP":
-						tokens.Add(new Token(TokenType.UP));
+						tokens.Add(lineNum, new Token(TokenType.UP));
                         break;
                     case "FORW":
-                        tokens.Add(new Token(TokenType.FORW));
+                        tokens.Add(lineNum, new Token(TokenType.FORW));
                         break;
                     case "BACK":
-                        tokens.Add(new Token(TokenType.BACK));
+                        tokens.Add(lineNum, new Token(TokenType.BACK));
                         break;
                     case "LEFT":
-                        tokens.Add(new Token(TokenType.LEFT));
+                        tokens.Add(lineNum, new Token(TokenType.LEFT));
                         break;
                     case "RIGHT":
-                        tokens.Add(new Token(TokenType.RIGHT));
+                        tokens.Add(lineNum, new Token(TokenType.RIGHT));
                         break;
                     case "COLOR":
-                        tokens.Add(new Token(TokenType.COLOR));
+                        tokens.Add(lineNum, new Token(TokenType.COLOR));
                         break;
                     case "REP":
-                        tokens.Add(new Token(TokenType.REP));
+                        tokens.Add(lineNum, new Token(TokenType.REP));
                         break;
                     case ".":
-                        tokens.Add(new Token(TokenType.DOT));
+                        tokens.Add(lineNum, new Token(TokenType.DOT));
                         break;
                     case @"""":
-                        tokens.Add(new Token(TokenType.QUOTE));
+                        tokens.Add(lineNum, new Token(TokenType.QUOTE));
                         break;
                     case @"\n":
-                        lineCount++;
+                        lineNum++;
                         break;
 
                     // Token has to be either a number or a hex value
                     default:
-                        Console.WriteLine($"Matched value: {m.Value}");
-                        throw new SyntaxError(lineCount);
+                        // Capture numeric value, if possible
+                        // If numeric, add a NUMBER token
+                        int val;
+                        if (int.TryParse(m.Value, out val))
+                            tokens.Add(lineNum, new Token(TokenType.NUMBER, val));
+                        else if (m.Value.StartsWith("#") && m.Value.Length == 7)
+                            tokens.Add(lineNum, new Token(TokenType.HEX, m.Value));
+                        else if (string.IsNullOrWhiteSpace(m.Value) && m.Value != null)
+                            tokens.Add(lineNum, new Token(TokenType.WHITESPACE));
+                        else
+                            throw new SyntaxError(lineNum);
+                        break;
 				}
 			}
+
+            return tokens;
 		}
 	}
 }

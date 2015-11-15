@@ -6,5 +6,7 @@ namespace S2
     internal class SyntaxError : Exception
     {
         public SyntaxError(int lineCount) : base("Syntaxfel på rad " + lineCount) {}
+
+        public SyntaxError(string message) : base(message) {}
     }
 }
