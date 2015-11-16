@@ -29,7 +29,22 @@ namespace S2
 
         private void Statement()
         {
+            Token current = NextToken();
 
+            TokenType[] shortInstr = { TokenType.UP, TokenType.DOWN };
+            TokenType[] regInstr = { TokenType.LEFT, TokenType.RIGHT, TokenType.FORW, TokenType.BACK };
+
+            // Handle short instructions, i.e. UP. and DOWN.
+            if (shortInstr.Contains(current.type))
+            {
+                Token next = NextToken();
+
+                if (next.type.Equals(TokenType.WHITESPACE))
+                    next = NextToken();
+
+                if (next.type.Equals(TokenType.DOT))
+
+            }
         }
 
         public bool HasMoreTokens()
