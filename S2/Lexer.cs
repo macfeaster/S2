@@ -12,7 +12,7 @@ namespace S2
         /// Get input from stdin and build a string of it.
         /// </summary>
         /// <returns>Stdin input as string</returns>
-		public string getInput()
+		public string GetInput()
 		{
 			StringBuilder input = new StringBuilder();
 			string line;
@@ -45,7 +45,7 @@ namespace S2
         /// <param name="input">Code string to parse</param>
         /// <returns>ListDictionary of parsed tokens, with line number as key, and
         /// the Tokens that line contains in a List, as value.</returns>
-		public ListDictionary parse(string input)
+		public ListDictionary Parse(string input)
 		{
             // Set up regex tools
 			var pattern = @"(DOWN|UP|FORW|BACK|LEFT|RIGHT|COLOR|REP|[0-9]+|[.]|""|[#][0-9A-F]{6}|\s+|\n)";
