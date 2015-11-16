@@ -8,22 +8,31 @@ namespace S2
 {
     class Lexer
 	{
-
+        /// <summary>
+        /// Get input from stdin and build a string of it.
+        /// </summary>
+        /// <returns>Stdin input as string</returns>
 		public string getInput()
 		{
 			StringBuilder input = new StringBuilder();
 			string line;
 
-			while (!string.IsNullOrWhiteSpace(line = Console.ReadLine()))
+            // Read all input, even empty lines and whitespaces
+			while ((line = Console.ReadLine()) != null)
 			{
+                // Check whether line has a comment
 				int commentIndex = line.IndexOf("%");
 
+                // Chop off lines with trailing comments
+                // Replace comment lines with empty lines
 				if (commentIndex > 0)
 					line = line.Substring(0, commentIndex);
 				else if (commentIndex == 0)
 					line = "";
 
+                // Uppercase and append with a newline character
 				input.Append(line.ToUpper());
+                input.Append("\n");
 			}
 
 			return input.ToString();
@@ -39,7 +48,7 @@ namespace S2
 		public ListDictionary parse(string input)
 		{
             // Set up regex tools
-			var pattern = @"(DOWN|UP|FORW|BACK|LEFT|RIGHT|COLOR|REP|[0-9]+|[.]|""|[#][0-9A-F]{6}|\s|\n)";
+			var pattern = @"(DOWN|UP|FORW|BACK|LEFT|RIGHT|COLOR|REP|[0-9]+|[.]|""|[#][0-9A-F]{6}|\s+|\n)";
 			var r = new Regex(pattern);
 			var matches = r.Matches(input);
 
