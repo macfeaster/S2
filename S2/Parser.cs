@@ -9,90 +9,48 @@ namespace S2
 {
     class Parser
     {
-        ListDictionary tokens;
+        List<Token> tokens;
         int repDepth = 0;
+        int currentToken = 0;
 
         // how2entrypoint
-        public Parser(ListDictionary tokens)
+        public Parser(List<Token> tokens)
         {
             this.tokens = tokens;
         }
-        
-        private void Gateway()
-        {
-            Token t = tokens.NextToken();
 
-            switch (t.type)
-            {
-                case TokenType.BACK:
-                    HandleBACK();
-                    Gateway();
-                    break;
-                case TokenType.FORW:
-                    HandleFORW();
-                    Gateway();
-                    break;
-                case TokenType.UP:
-                    HandleUP();
-                    Gateway();
-                    break;
-                case TokenType.DOWN:
-                    HandleDOWN();
-                    Gateway();
-                    break;
-                case TokenType.LEFT:
-                    HandleLEFT();
-                    Gateway();
-                    break;
-                case TokenType.RIGHT:
-                    HandleRIGHT();
-                    Gateway();
-                    break;
-                case TokenType.COLOR:
-                    HandleCOLOR();
-                    Gateway();
-                    break;
-                case TokenType.WHITESPACE:
-                    Gateway();
-                    break;
-            }
+        private void StatementList()
+        {
+            Statement();
+
+            if (HasMoreTokens())
+                StatementList();
         }
 
-        private void HandleBACK()
+        private void Statement()
         {
 
         }
 
-        private void HandleFORW()
+        public bool HasMoreTokens()
         {
-
+            return currentToken < tokens.Count;
         }
 
-        private void HandleRIGHT()
+        public Token PeekToken()
         {
-            throw new NotImplementedException();
+            if (!HasMoreTokens())
+                throw new SyntaxError(tokens.Last().lineNum);
+
+            return tokens.ElementAt(currentToken);
         }
 
-        private void HandleLEFT()
+        public Token NextToken()
         {
-            throw new NotImplementedException();
+            Token t = PeekToken();
+            currentToken++;
+            return t;
         }
 
-        private void HandleDOWN()
-        {
-            throw new NotImplementedException();
-        }
-
-        private void HandleUP()
-        {
-            throw new NotImplementedException();
-        }
-
-        private void HandleCOLOR()
-        {
-            throw new NotImplementedException();
-        }
-
-       
     }
 }

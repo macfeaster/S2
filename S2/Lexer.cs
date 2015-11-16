@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using System.Text.RegularExpressions;
 using static S2.Token;
 
@@ -8,6 +9,9 @@ namespace S2
 {
     class Lexer
 	{
+        List<Token> tokens;
+        int currentToken = 0;
+
         /// <summary>
         /// Get input from stdin and build a string of it.
         /// </summary>
@@ -45,7 +49,7 @@ namespace S2
         /// <param name="input">Code string to parse</param>
         /// <returns>ListDictionary of parsed tokens, with line number as key, and
         /// the Tokens that line contains in a List, as value.</returns>
-		public ListDictionary Parse(string input)
+		public List<Token> Parse(string input)
 		{
             // Set up regex tools
 			var pattern = @"(DOWN|UP|FORW|BACK|LEFT|RIGHT|COLOR|REP|[0-9]+|[.]|""|[#][0-9A-F]{6}|\s+|\n)";
@@ -53,7 +57,7 @@ namespace S2
 			var matches = r.Matches(input);
 
             // Parsed tokens are placed in a list, lineCount keeps track of which line errors occur on
-            var tokens = new ListDictionary();
+            tokens = new List<Token>();
 			int lineNum = 0;
             int lexPos = 0;
 
@@ -63,34 +67,34 @@ namespace S2
                 switch (m.Value)
 				{
 					case "DOWN":
-						tokens.Add(lineNum, new Token(TokenType.DOWN));
+						tokens.Add(new Token(lineNum, TokenType.DOWN));
 						break;
 					case "UP":
-						tokens.Add(lineNum, new Token(TokenType.UP));
+						tokens.Add(new Token(lineNum, TokenType.UP));
                         break;
                     case "FORW":
-                        tokens.Add(lineNum, new Token(TokenType.FORW));
+                        tokens.Add(new Token(lineNum, TokenType.FORW));
                         break;
                     case "BACK":
-                        tokens.Add(lineNum, new Token(TokenType.BACK));
+                        tokens.Add(new Token(lineNum, TokenType.BACK));
                         break;
                     case "LEFT":
-                        tokens.Add(lineNum, new Token(TokenType.LEFT));
+                        tokens.Add(new Token(lineNum, TokenType.LEFT));
                         break;
                     case "RIGHT":
-                        tokens.Add(lineNum, new Token(TokenType.RIGHT));
+                        tokens.Add(new Token(lineNum, TokenType.RIGHT));
                         break;
                     case "COLOR":
-                        tokens.Add(lineNum, new Token(TokenType.COLOR));
+                        tokens.Add(new Token(lineNum, TokenType.COLOR));
                         break;
                     case "REP":
-                        tokens.Add(lineNum, new Token(TokenType.REP));
+                        tokens.Add(new Token(lineNum, TokenType.REP));
                         break;
                     case ".":
-                        tokens.Add(lineNum, new Token(TokenType.DOT));
+                        tokens.Add(new Token(lineNum, TokenType.DOT));
                         break;
                     case @"""":
-                        tokens.Add(lineNum, new Token(TokenType.QUOTE));
+                        tokens.Add(new Token(lineNum, TokenType.QUOTE));
                         break;
                     case @"\n":
                         lineNum++;
@@ -102,15 +106,15 @@ namespace S2
                         // If numeric, add a NUMBER token
                         int val;
                         if (int.TryParse(m.Value, out val))
-                            tokens.Add(lineNum, new Token(TokenType.NUMBER, val));
+                            tokens.Add(new Token(lineNum, TokenType.NUMBER, val));
                         // A seven character string, starting with #, is a hex color code
                         // match of our hex regex pattern
                         else if (m.Value.StartsWith("#") && m.Value.Length == 7)
-                            tokens.Add(lineNum, new Token(TokenType.HEX, m.Value));
+                            tokens.Add(new Token(lineNum, TokenType.HEX, m.Value));
                         // A matched value which is null or whitespace and is not null
                         // is whitespace
                         else if (string.IsNullOrWhiteSpace(m.Value) && m.Value != null)
-                            tokens.Add(lineNum, new Token(TokenType.WHITESPACE));
+                            tokens.Add(new Token(lineNum, TokenType.WHITESPACE));
                         // The matcher has encountered unknown data
                         else
                             throw new SyntaxError(lineNum);

@@ -8,21 +8,25 @@ namespace S2
 
 		public TokenType type { get; private set; }
 		public Object data { get; private set; }
+        public int lineNum { get; private set; }
 
-		public Token(TokenType type, int data)
+		public Token(int lineNum, TokenType type, int data)
 		{
+            this.lineNum = lineNum;
 			this.type = type;
 			this.data = data;
 		}
 
-        public Token(TokenType type, string hex)
+        public Token(int lineNum, TokenType type, string hex)
         {
+            this.lineNum = lineNum;
             this.type = type;
-            this.data = data;
+            data = data;
         }
 
-		public Token(TokenType type)
+		public Token(int lineNum, TokenType type)
 		{
+            this.lineNum = lineNum;
 			this.type = type;
 			data = null;
 		}
