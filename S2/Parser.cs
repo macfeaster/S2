@@ -10,6 +10,7 @@ namespace S2
     class Parser
     {
         List<Token> tokens;
+        List<Instruction> instructions = new List<Instruction>();
         int repDepth = 0;
         int currentToken = 0;
 
@@ -17,17 +18,18 @@ namespace S2
         public Parser(List<Token> tokens)
         {
             this.tokens = tokens;
+            StatementList(instructions);
         }
 
-        private void StatementList()
+        private void StatementList(List<Instruction> output)
         {
-            Statement();
+            Statement(output);
 
             if (HasMoreTokens())
-                StatementList();
+                StatementList(output);
         }
 
-        private void Statement()
+        private void Statement(List<Instruction> output)
         {
             Token current = NextToken();
 
@@ -37,14 +39,92 @@ namespace S2
             // Handle short instructions, i.e. UP. and DOWN.
             if (shortInstr.Contains(current.type))
             {
-                Token next = NextToken();
-
-                if (next.type.Equals(TokenType.WHITESPACE))
-                    next = NextToken();
-
-                if (next.type.Equals(TokenType.DOT))
-
+                output.Add(HandleShort(current));
             }
+            // Handle regular instructions, i.e. LEFT 2, FORW 10.
+            else if (regInstr.Contains(current.type))
+            {
+                output.Add(HandleReg(current));
+            }
+        }
+
+        private Instruction HandleShort(Token current)
+        {
+            Token next = NextToken();
+
+            if (next.type.Equals(TokenType.WHITESPACE))
+                next = NextToken();
+
+            if (next.type.Equals(TokenType.DOT))
+                return new Instruction(current.type);
+            else
+                throw new SyntaxError(current.lineNum);
+        }
+
+        private Instruction HandleReg(Token current)
+        {
+            Token next = NextToken();
+
+            // Has to contain a whitespace
+            if (!next.type.Equals(TokenType.WHITESPACE))
+                throw new SyntaxError(current.lineNum);
+
+            next = NextToken();
+
+            // Followed by a number
+            if (!next.type.Equals(TokenType.NUMBER))
+                throw new SyntaxError(next.lineNum);
+
+            if (NextToken().type.Equals(TokenType.DOT))
+                return new Instruction(current.type, (int) next.data);
+            else
+                throw new SyntaxError(current.lineNum);
+        }
+
+        private Instruction HandleColor(Token current)
+        {
+            Token next = NextToken();
+
+            // Has to contain a whitespace
+            if (!next.type.Equals(TokenType.WHITESPACE))
+                throw new SyntaxError(current.lineNum);
+
+            next = NextToken();
+
+            // Followed by a number
+            if (!next.type.Equals(TokenType.HEX))
+                throw new SyntaxError(next.lineNum);
+
+            if (NextToken().type.Equals(TokenType.DOT))
+                return new Instruction(TokenType.COLOR, (string) next.data);
+            else
+                throw new SyntaxError(current.lineNum);
+        }
+
+        private Instruction HandleRep(Token current)
+        {
+            Token next = NextToken();
+
+            // Has to contain a whitespace
+            if (!next.type.Equals(TokenType.WHITESPACE))
+                throw new SyntaxError(next.lineNum);
+
+            next = NextToken();
+
+            if (!next.type.Equals(TokenType.WHITESPACE))
+                throw new SyntaxError(next.lineNum);
+
+            var determinator = PeekToken();
+
+            if (determinator.type.Equals(TokenType.QUOTE))
+            {
+                // recursion
+            }
+            else
+            {
+                // single instruction rep
+            }
+
         }
 
         public bool HasMoreTokens()

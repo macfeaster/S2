@@ -29,6 +29,12 @@ namespace S2
             this.num = num;
         }
 
+        public Instruction(TokenType type, string hex)
+        {
+            this.type = type;
+            this.hex = hex;
+        }
+
 
     }
 }
