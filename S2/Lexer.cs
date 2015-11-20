@@ -10,7 +10,6 @@ namespace S2
     class Lexer
 	{
         List<Token> tokens;
-        int currentToken = 0;
 
         /// <summary>
         /// Get input from stdin and build a string of it.

@@ -11,25 +11,27 @@ namespace S2
     {
         List<Token> tokens;
         List<Instruction> instructions = new List<Instruction>();
-        int repDepth = 0;
         int currentToken = 0;
 
-        // how2entrypoint
+        // Entry point
         public Parser(List<Token> tokens)
         {
             this.tokens = tokens;
             StatementList(instructions);
+
+            if (HasMoreTokens())
+                throw new SyntaxError("Tokens left after parsing completed, unexpected token " + PeekToken());
         }
 
         private void StatementList(List<Instruction> output)
         {
-            Statement(output);
+            bool statementParsed = Statement(output);
 
-            if (HasMoreTokens())
+            if (HasMoreTokens() && statementParsed)
                 StatementList(output);
         }
 
-        private void Statement(List<Instruction> output)
+        private bool Statement(List<Instruction> output)
         {
             Token current = NextToken();
 
@@ -40,16 +42,21 @@ namespace S2
             if (shortInstr.Contains(current.type))
             {
                 output.Add(HandleShort(current));
+                return true;
             }
             // Handle regular instructions, i.e. LEFT 2, FORW 10.
             else if (regInstr.Contains(current.type))
             {
                 output.Add(HandleReg(current));
+                return true;
             }
             else if (current.type.Equals(TokenType.COLOR))
             {
                 output.Add(HandleColor(current));
+                return true;
             }
+
+            return false;
         }
 
         private Instruction HandleShort(Token current)
@@ -111,28 +118,33 @@ namespace S2
 
             // Has to contain a whitespace
             if (!next.type.Equals(TokenType.WHITESPACE))
-                throw new SyntaxError(next.lineNum);
+                throw new SyntaxError(next.lineNum, "Whitespace expected after REP token");
 
             next = NextToken();
 
             // Has to contain a number
             if (!next.type.Equals(TokenType.NUMBER))
-                throw new SyntaxError(next.lineNum);
+                throw new SyntaxError(next.lineNum, "Number expected after REP + whitespace");
 
             next = NextToken();
 
             if (!next.type.Equals(TokenType.WHITESPACE))
-                throw new SyntaxError(next.lineNum);
+                throw new SyntaxError(next.lineNum, "Whitespace expected after REP number");
 
             int num = next.num;
 
             var determinator = PeekToken();
 
+            // TODO: Handle 
             if (determinator.type.Equals(TokenType.QUOTE))
             {
                 // As long as the 
                 var recursiveList = new List<Instruction>();
                 StatementList(recursiveList);
+
+                if (!next.type.Equals(TokenType.QUOTE))
+                    throw new SyntaxError(PeekToken().lineNum, "Quote expected after REP statements");
+
                 return new Instruction(TokenType.REP, num, recursiveList);
                 // recursion
             }
