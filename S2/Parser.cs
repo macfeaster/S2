@@ -76,7 +76,7 @@ namespace S2
                 throw new SyntaxError(next.lineNum);
 
             if (NextToken().type.Equals(TokenType.DOT))
-                return new Instruction(current.type, (int) next.data);
+                return new Instruction(current.type, (int) next.num);
             else
                 throw new SyntaxError(current.lineNum);
         }
@@ -96,7 +96,7 @@ namespace S2
                 throw new SyntaxError(next.lineNum);
 
             if (NextToken().type.Equals(TokenType.DOT))
-                return new Instruction(TokenType.COLOR, (string) next.data);
+                return new Instruction(TokenType.COLOR, next.hex);
             else
                 throw new SyntaxError(current.lineNum);
         }
@@ -111,8 +111,16 @@ namespace S2
 
             next = NextToken();
 
+            // Has to contain a number
+            if (!next.type.Equals(TokenType.NUMBER))
+                throw new SyntaxError(next.lineNum);
+
+            next = NextToken();
+
             if (!next.type.Equals(TokenType.WHITESPACE))
                 throw new SyntaxError(next.lineNum);
+
+            int num = next.num;
 
             var determinator = PeekToken();
 
@@ -122,9 +130,10 @@ namespace S2
             }
             else
             {
-                // single instruction rep
+                List<Instruction> rep = new List<Instruction>();
+                Statement(rep);
+                return new Instruction(TokenType.REP, num, rep);
             }
-
         }
 
         public bool HasMoreTokens()

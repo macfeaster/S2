@@ -35,6 +35,12 @@ namespace S2
             this.hex = hex;
         }
 
+        public Instruction(TokenType type, int num, List<Instruction> subInstr)
+        {
+            this.type = type;
+            this.num = num;
+            this.subInstr = subInstr;
+        }
 
     }
 }
