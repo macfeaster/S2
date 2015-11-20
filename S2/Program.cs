@@ -33,6 +33,8 @@ namespace S2
                 Console.WriteLine(e.Message);
             } */
 
+            Console.WriteLine("DONE PARSING");
+
             Console.ReadLine();
         }
 	}

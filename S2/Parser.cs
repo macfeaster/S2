@@ -63,6 +63,10 @@ namespace S2
                 Console.WriteLine("Parsed " + current.type + " instruction.");
                 return true;
             }
+            else if (current.type.Equals(TokenType.WHITESPACE))
+            {
+                return true;
+            }
 
             Console.WriteLine("Could not parse " + current.type + " instruction.");
 
