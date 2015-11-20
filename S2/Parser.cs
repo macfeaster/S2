@@ -46,6 +46,10 @@ namespace S2
             {
                 output.Add(HandleReg(current));
             }
+            else if (current.type.Equals(TokenType.COLOR))
+            {
+                output.Add(HandleColor(current));
+            }
         }
 
         private Instruction HandleShort(Token current)
@@ -126,6 +130,10 @@ namespace S2
 
             if (determinator.type.Equals(TokenType.QUOTE))
             {
+                // As long as the 
+                var recursiveList = new List<Instruction>();
+                StatementList(recursiveList);
+                return new Instruction(TokenType.REP, num, recursiveList);
                 // recursion
             }
             else
