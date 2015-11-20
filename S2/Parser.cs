@@ -23,6 +23,11 @@ namespace S2
                 throw new SyntaxError("Tokens left after parsing completed, unexpected token " + PeekToken());
         }
 
+        public List<Instruction> GetTree()
+        {
+            return instructions;
+        }
+
         private void StatementList(List<Instruction> output)
         {
             bool statementParsed = Statement(output);
@@ -42,19 +47,24 @@ namespace S2
             if (shortInstr.Contains(current.type))
             {
                 output.Add(HandleShort(current));
+                Console.WriteLine("Parsed " + current.type + " instruction.");
                 return true;
             }
             // Handle regular instructions, i.e. LEFT 2, FORW 10.
             else if (regInstr.Contains(current.type))
             {
                 output.Add(HandleReg(current));
+                Console.WriteLine("Parsed " + current.type + " instruction.");
                 return true;
             }
             else if (current.type.Equals(TokenType.COLOR))
             {
                 output.Add(HandleColor(current));
+                Console.WriteLine("Parsed " + current.type + " instruction.");
                 return true;
             }
+
+            Console.WriteLine("Could not parse " + current.type + " instruction.");
 
             return false;
         }
@@ -69,7 +79,7 @@ namespace S2
             if (next.type.Equals(TokenType.DOT))
                 return new Instruction(current.type);
             else
-                throw new SyntaxError(current.lineNum);
+                throw new SyntaxError(current.lineNum, "Expected DOT token after INSTR + whitespace, got " + next.type);
         }
 
         private Instruction HandleReg(Token current)
@@ -78,18 +88,18 @@ namespace S2
 
             // Has to contain a whitespace
             if (!next.type.Equals(TokenType.WHITESPACE))
-                throw new SyntaxError(current.lineNum);
+                throw new SyntaxError(current.lineNum, "Expected WHITESPACE token after INSTR, got " + next.type);
 
             next = NextToken();
 
             // Followed by a number
             if (!next.type.Equals(TokenType.NUMBER))
-                throw new SyntaxError(next.lineNum);
+                throw new SyntaxError(next.lineNum, "Expected number after whitespace token, got " + next.type);
 
             if (NextToken().type.Equals(TokenType.DOT))
                 return new Instruction(current.type, (int) next.num);
             else
-                throw new SyntaxError(current.lineNum);
+                throw new SyntaxError(current.lineNum, "Expected DOT token at the end of instruction, got " + next.type);
         }
 
         private Instruction HandleColor(Token current)
@@ -98,18 +108,18 @@ namespace S2
 
             // Has to contain a whitespace
             if (!next.type.Equals(TokenType.WHITESPACE))
-                throw new SyntaxError(current.lineNum);
+                throw new SyntaxError(current.lineNum, "Expected whitespace after color token, got " + next.type);
 
             next = NextToken();
 
             // Followed by a number
             if (!next.type.Equals(TokenType.HEX))
-                throw new SyntaxError(next.lineNum);
+                throw new SyntaxError(next.lineNum, "Expected hex token after whitespace, got " + next.type);
 
             if (NextToken().type.Equals(TokenType.DOT))
                 return new Instruction(TokenType.COLOR, next.hex);
             else
-                throw new SyntaxError(current.lineNum);
+                throw new SyntaxError(current.lineNum, "Expected dot after hex token, got " + next.type);
         }
 
         private Instruction HandleRep(Token current)
@@ -164,7 +174,7 @@ namespace S2
         public Token PeekToken()
         {
             if (!HasMoreTokens())
-                throw new SyntaxError(tokens.Last().lineNum);
+                throw new SyntaxError(tokens.Last().lineNum, "Tried to peek token when no more tokens exist");
 
             return tokens.ElementAt(currentToken);
         }
