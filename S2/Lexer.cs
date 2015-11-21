@@ -66,6 +66,9 @@ namespace S2
             // Set up regex tools
 			var pattern = @"(DOWN|UP|FORW|BACK|LEFT|RIGHT|COLOR|REP|[0-9]+|[#][0-9A-F]{6}|[.]|""|(\r|\n|\r\n)|\s+)";
 			var r = new Regex(pattern);
+
+            // Parsed tokens are placed in a list, lineCount keeps track of which line errors occur on
+            tokens = new List<Token>();
             var lineNum = 0;
 
             foreach (string line in input)
@@ -73,8 +76,6 @@ namespace S2
 			    var matches = r.Matches(line);
                 lineNum++;
 
-                // Parsed tokens are placed in a list, lineCount keeps track of which line errors occur on
-                tokens = new List<Token>();
                 int lexPos = 0;
 
 			    foreach (Match m in matches)
@@ -157,13 +158,15 @@ namespace S2
                             break;
 				    }
 
+                    if (!tokens.Last().type.Equals(Token.TokenType.WHITESPACE))
+                       tokens.Add(new Token(lineNum, Token.TokenType.WHITESPACE));
+
                     lexPos = m.Index + m.Value.Length;
 			    }
 
                 // If there is still unparsed data, there is something illegal that cannot be lexed
                 if (lexPos != line.Length)
-                    throw new SyntaxError(lineNum,
-                        "Remaining illegal tokens: " + line.Substring(lexPos));
+                    tokens.Add(new Token(lineNum, Token.TokenType.INVALID));
             }
 
             return tokens;

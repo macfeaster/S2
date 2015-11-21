@@ -4,7 +4,10 @@ namespace S2
 {
     class Token
 	{
-		public enum TokenType { UP, DOWN, LEFT, RIGHT, FORW, BACK, COLOR, REP, NUMBER, HEX, QUOTE, WHITESPACE, DOT }
+		public enum TokenType
+        {
+            UP, DOWN, LEFT, RIGHT, FORW, BACK, COLOR, REP, NUMBER, HEX, QUOTE, WHITESPACE, DOT, INVALID
+        }
 
 		public TokenType type { get; private set; }
 		public int num { get; private set; }

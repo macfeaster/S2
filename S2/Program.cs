@@ -17,6 +17,7 @@ namespace S2
                 "DOWN.",
                 "FORW 1. LEFT 90.",
                 "FORW 1. LEFT 90.",
+                "FORW 1. LEFT 90.",
                 "FORW 1. LEFT 90."
             };
 
@@ -28,7 +29,7 @@ namespace S2
                 "",
                 "% radbrytning/space/tabb för",
                 "% att göra koden mer läslig.",
-                "REP 3 \"COLOR ##FF0000.",
+                "REP 3 \"COLOR #FF0000.",
                 "       FORW 1. LEFT 10.",
                 "       COLOR #000000.",
                 "       FORW 2. LEFT 20.\"",
@@ -125,7 +126,7 @@ namespace S2
                 Lexer l = new Lexer();
 
                 #if DEBUG
-                    List<string> preprocessed = l.FilterInput(program8);
+                    List<string> preprocessed = l.FilterInput(program7);
                 #else
                     List<string> input = l.GetInput();
                     List<string> preprocessed = l.FilterInput(input);
@@ -136,18 +137,21 @@ namespace S2
                 Parser p = new Parser(parsed);
                 List<Instruction> tree = p.GetTree();
 
-                Console.WriteLine(string.Join(Environment.NewLine, tree));
-
                 #if DEBUG
                     Console.WriteLine(string.Join(Environment.NewLine, tree));
                 #endif
+
+                Runner r = new Runner(tree);
+
             }
             catch (SyntaxError e)
             {
                 Console.WriteLine(e.Message);
             }
 
-            Console.ReadLine();
+            #if DEBUG
+                Console.ReadLine();
+            #endif
         }
 	}
 }
