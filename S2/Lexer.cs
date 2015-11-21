@@ -82,47 +82,47 @@ namespace S2
                 switch (m.Value)
 				{
 					case "DOWN":
-                        Console.WriteLine("Recognized DOWN token on line " + lineNum);
+                        Log.Debug("Recognized DOWN token on line " + lineNum);
 						tokens.Add(new Token(lineNum, Token.TokenType.DOWN));
 						break;
 					case "UP":
-                        Console.WriteLine("Recognized UP token on line " + lineNum);
+                        Log.Debug("Recognized UP token on line " + lineNum);
                         tokens.Add(new Token(lineNum, Token.TokenType.UP));
                         break;
                     case "FORW":
                         tokens.Add(new Token(lineNum, Token.TokenType.FORW));
-                        Console.WriteLine("Recognized FORW token on line " + lineNum);
+                        Log.Debug("Recognized FORW token on line " + lineNum);
                         break;
                     case "BACK":
                         tokens.Add(new Token(lineNum, Token.TokenType.BACK));
-                        Console.WriteLine("Recognized BACK token on line " + lineNum);
+                        Log.Debug("Recognized BACK token on line " + lineNum);
                         break;
                     case "LEFT":
                         tokens.Add(new Token(lineNum, Token.TokenType.LEFT));
-                        Console.WriteLine("Recognized LEFT token on line " + lineNum);
+                        Log.Debug("Recognized LEFT token on line " + lineNum);
                         break;
                     case "RIGHT":
                         tokens.Add(new Token(lineNum, Token.TokenType.RIGHT));
-                        Console.WriteLine("Recognized RIGHT token on line " + lineNum);
+                        Log.Debug("Recognized RIGHT token on line " + lineNum);
                         break;
                     case "COLOR":
                         tokens.Add(new Token(lineNum, Token.TokenType.COLOR));
-                        Console.WriteLine("Recognized COLOR token on line " + lineNum);
+                        Log.Debug("Recognized COLOR token on line " + lineNum);
                         break;
                     case "REP":
                         tokens.Add(new Token(lineNum, Token.TokenType.REP));
-                        Console.WriteLine("Recognized REP token on line " + lineNum);
+                        Log.Debug("Recognized REP token on line " + lineNum);
                         break;
                     case ".":
                         tokens.Add(new Token(lineNum, Token.TokenType.DOT));
-                        Console.WriteLine("Recognized DOT token on line " + lineNum);
+                        Log.Debug("Recognized DOT token on line " + lineNum);
                         break;
                     case @"""":
                         tokens.Add(new Token(lineNum, Token.TokenType.QUOTE));
-                        Console.WriteLine("Recognized QUOTE token on line " + lineNum);
+                        Log.Debug("Recognized QUOTE token on line " + lineNum);
                         break;
                     case @"\n":
-                        Console.WriteLine("Recognized NEWLINE token on line " + (lineNum + 1));
+                        Log.Debug("Recognized NEWLINE token on line " + (lineNum + 1));
                         lineNum++;
                         break;
 
@@ -133,14 +133,14 @@ namespace S2
                         int val;
                         if (int.TryParse(m.Value, out val))
                         {
-                            Console.WriteLine("Recognized NUMBER token on line " + lineNum);
+                            // Console.WriteLine("Recognized NUMBER token on line " + lineNum);
                             tokens.Add(new Token(lineNum, Token.TokenType.NUMBER, val));
                         }
                         // A seven character string, starting with #, is a hex color code
                         // match of our hex regex pattern
                         else if (m.Value.StartsWith("#") && m.Value.Length == 7)
                         {
-                            Console.WriteLine("Recognized HEX token on line " + lineNum);
+                            // Console.WriteLine("Recognized HEX token on line " + lineNum);
                             tokens.Add(new Token(lineNum, Token.TokenType.HEX, m.Value));
                         }
                         // A matched value which is null or whitespace and is not null
@@ -149,12 +149,12 @@ namespace S2
                         {
                             if (m.Value.IndexOf('\n') >= 0 || m.Value.IndexOf('\r') >= 0)
                             {
-                                Console.WriteLine("Recognized NEWLINE token on line " + (lineNum + 1));
+                                // Console.WriteLine("Recognized NEWLINE token on line " + (lineNum + 1));
                                 lineNum++;
                             }
                             else
                             {
-                                Console.WriteLine("Recognized WHITESPACE token on line " + lineNum);
+                                // Console.WriteLine("Recognized WHITESPACE token on line " + lineNum);
                                 tokens.Add(new Token(lineNum, Token.TokenType.WHITESPACE));
                             }
                         }

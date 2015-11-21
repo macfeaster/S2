@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace S2
 {
-	class Program
+    class Program
 	{
 		static void Main(string[] args)
 		{
@@ -46,23 +46,32 @@ namespace S2
                                 "% bokstäver eller en blandning." + Environment.NewLine +
                                 "color #AbcdEF. left 70. foRW 10." + Environment.NewLine;
 
-            /* try
-            {*/
+            try
+            {
                 Lexer l = new Lexer();
-                string preprocessed = l.FilterInput(program3);
+
+                #if DEBUG
+                    string preprocessed = l.FilterInput(program3);
+                #else
+                    string input = l.GetInput();
+                    string preprocessed = l.FilterInput(input);
+                #endif
+
                 List<Token> parsed = l.Parse(preprocessed);
 
                 Parser p = new Parser(parsed);
                 List<Instruction> tree = p.GetTree();
 
-            Console.WriteLine(string.Join(Environment.NewLine, tree));
-            /* }
+                Console.WriteLine(string.Join(Environment.NewLine, tree));
+
+                #if DEBUG
+                    Console.WriteLine(string.Join(Environment.NewLine, tree));
+                #endif
+            }
             catch (SyntaxError e)
             {
                 Console.WriteLine(e.Message);
-            } */
-
-            Console.WriteLine("DONE PARSING");
+            }
 
             Console.ReadLine();
         }
