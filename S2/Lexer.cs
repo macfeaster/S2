@@ -158,11 +158,10 @@ namespace S2
                             break;
 				    }
 
-                    if (!tokens.Last().type.Equals(Token.TokenType.WHITESPACE))
-                       tokens.Add(new Token(lineNum, Token.TokenType.WHITESPACE));
-
                     lexPos = m.Index + m.Value.Length;
 			    }
+
+                tokens.Add(new Token(lineNum, Token.TokenType.WHITESPACE));
 
                 // If there is still unparsed data, there is something illegal that cannot be lexed
                 if (lexPos != line.Length)

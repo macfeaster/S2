@@ -217,7 +217,7 @@ namespace S2
             {
                 while (next.type.Equals(Token.TokenType.WHITESPACE))
                 {
-                    Log.Debug("Ignored whitespace token " + next);
+                    Log.Debug("---> Not expecting whitespace, expecting " + type + ", ignored whitespace token " + next + " at line " + next.lineNum);
                     next = NextToken();
                 }
             }

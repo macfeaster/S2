@@ -134,6 +134,10 @@ namespace S2
 
                 List<Token> parsed = l.Parse(preprocessed);
 
+                #if DEBUG
+                    Console.WriteLine(string.Join(Environment.NewLine, parsed));
+                #endif
+
                 Parser p = new Parser(parsed);
                 List<Instruction> tree = p.GetTree();
 
