@@ -63,6 +63,13 @@ namespace S2
                 Console.WriteLine("Parsed " + current.type + " instruction.");
                 return true;
             }
+            else if (current.type.Equals(TokenType.REP))
+            {
+                Console.WriteLine("Begin REP parsing");
+                output.Add(HandleRep(current));
+                Console.WriteLine("REP parsed");
+                return true;
+            }
             else if (current.type.Equals(TokenType.WHITESPACE))
             {
                 return true;
@@ -157,7 +164,7 @@ namespace S2
                 StatementList(recursiveList);
 
                 if (!next.type.Equals(TokenType.QUOTE))
-                    throw new SyntaxError(PeekToken().lineNum, "Quote expected after REP statements");
+                    throw new SyntaxError(PeekToken().lineNum, "Quote expected after REP statements, got " + PeekToken().type);
 
                 return new Instruction(TokenType.REP, num, recursiveList);
                 // recursion

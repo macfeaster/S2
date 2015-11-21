@@ -42,5 +42,27 @@ namespace S2
             this.subInstr = subInstr;
         }
 
+        public override String ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("<").Append(type);
+
+            if (num > 0)
+                sb.Append(" ").Append(num);
+
+            if (!string.IsNullOrEmpty(hex))
+                sb.Append(" ").Append(hex);
+
+            if (subInstr != null)
+                sb
+                    .Append(Environment.NewLine + "<<")
+                    .Append(string.Join(", ", subInstr))
+                    .Append(">>" + Environment.NewLine);
+
+            sb.Append(">");
+
+            return sb.ToString();
+        }
+
     }
 }

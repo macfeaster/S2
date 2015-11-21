@@ -34,5 +34,10 @@ namespace S2
 			num = 0;
             hex = null;
 		}
-	}
+
+        public override string ToString()
+        {
+            return type.ToString();
+        }
+    }
 }
