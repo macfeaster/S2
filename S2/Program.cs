@@ -10,51 +10,125 @@ namespace S2
 	{
 		static void Main(string[] args)
 		{
-            string program = @"% Det här är en kommentar" + Environment.NewLine +
-                                "% Nu ritar vi en kvadrat" + Environment.NewLine +
-                                "DOWN." + Environment.NewLine +
-                                "FORW 1. LEFT 90." + Environment.NewLine +
-                                "FORW 1. LEFT 90." + Environment.NewLine +
-                                "FORW 1. LEFT 90." + Environment.NewLine;
+            List<string> program = new List<string>()
+            {
+                "% Det här är en kommentar",
+                "% Nu ritar vi en kvadrat",
+                "DOWN.",
+                "FORW 1. LEFT 90.",
+                "FORW 1. LEFT 90.",
+                "FORW 1. LEFT 90."
+            };
 
-            string program2 = "% Space runt punkt valfritt." + Environment.NewLine +
-                                "DOWN  . UP.DOWN.  DOWN." + Environment.NewLine +
-                                "% Rader kan vara tomma" + Environment.NewLine +
-                                "" + Environment.NewLine +
-                                "% radbrytning/space/tabb för" + Environment.NewLine +
-                                "% att göra koden mer läslig." + Environment.NewLine +
-                                "REP 3 \"COLOR ##FF0000." + Environment.NewLine +
-                                "       FORW 1. LEFT 10." + Environment.NewLine +
-                                "       COLOR #000000." + Environment.NewLine +
-                                "       FORW 2. LEFT 20.\"" + Environment.NewLine +
-                                "% Eller oläslig" + Environment.NewLine +
-                                "           COLOR" + Environment.NewLine +
-                                "% färgval på gång" + Environment.NewLine +
-                                "  #111111." + Environment.NewLine +
-                                "REP 1 BACK 1." + Environment.NewLine;
+            List<string> program2 = new List<string>()
+            {
+                "% Space runt punkt valfritt.",
+                "DOWN  . UP.DOWN.  DOWN.",
+                "% Rader kan vara tomma",
+                "",
+                "% radbrytning/space/tabb för",
+                "% att göra koden mer läslig.",
+                "REP 3 \"COLOR ##FF0000.",
+                "       FORW 1. LEFT 10.",
+                "       COLOR #000000.",
+                "       FORW 2. LEFT 20.\"",
+                "% Eller oläslig",
+                "           COLOR",
+                "% färgval på gång",
+                "  #111111.",
+                "REP 1 BACK 1."
+            };
 
-            string program3 = "% Nästlad loop 1" + Environment.NewLine +
-                                "REP 2 \"UP.FORW 10.DOWN.REP 3 \"LEFT 120. FORW 1.\"\"" + Environment.NewLine +
-                                "% Nästlad loop 2" + Environment.NewLine +
-                                "REP 3 \"REP 2 \"RIGHT 2. FORW 1.\"" + Environment.NewLine +
-                                "       COLOR #FF0000. FORW 10. COLOR #0000FF.\"" + Environment.NewLine +
-                                "% COLOR #000000. % Bortkommenterat färgbyte" + Environment.NewLine +
-                                "BACK 10." + Environment.NewLine +
-                                "% Upper/lower case ignoreras" + Environment.NewLine +
-                                "% Detta gäller även hex-tecknen A-F i färgerna i utdata," + Environment.NewLine +
-                                "% det spelar ingen roll om du använder stora eller små" + Environment.NewLine +
-                                "% bokstäver eller en blandning." + Environment.NewLine +
-                                "color #AbcdEF. left 70. foRW 10." + Environment.NewLine;
+            List<string> program3 = new List<string>()
+            {
+                "% Syntaxfel: felaktig färgsyntax",
+                "COLOR 05AB34.",
+                "FORW 1."
+            };
+
+            List<string> program4 = new List<string>()
+            {
+                "% Oavslutad loop",
+                "REP 5 \"DOWN. FORW 1. LEFT 10."
+            };
+
+            List<string> program5 = new List<string>()
+            {
+                "% Syntaxfel: ej heltal",
+                "FORW 2,3."
+            };
+
+            List<string> program6 = new List<string>()
+            {
+                @"%&(CDH*(",
+                "FORW",
+                "#123456.",
+                "& C(*N & (*#NRC"
+            };
+
+            List<string> program7 = new List<string>()
+            {
+                "% Måste vara whitespace mellan",
+                "% kommando och parameter",
+                "DOWN.COLOR#000000."
+            };
+
+            List<string> program8 = new List<string>()
+            {
+                "% Syntaxfel: saknas punkt.",
+                "DOWN ",
+                "% Om filen tar slut mitt i ett kommando",
+                "% så anses felet ligga på sista raden ",
+                "   % i filen där det förekom någon kod"
+            };
+
+            List<string> program9 = new List<string>()
+            {
+                "% Måste vara space mellan argument",
+                "REP  5\"FORW 1.\"",
+                "% Detta inte OK heller",
+                "REP   5FORW 1."
+            };
+
+            List<string> program10 = new List<string>()
+            {
+                "% Nästlad loop 1",
+                "REP 2 \"UP.FORW 10.DOWN.REP 3 \"LEFT 120. FORW 1.\"\"",
+                "% Nästlad loop 2",
+                "REP 3 \"REP 2 \"RIGHT 2. FORW 1.\"",
+                "       COLOR #FF0000. FORW 10. COLOR #0000FF.\"",
+                "% COLOR #000000. % Bortkommenterat färgbyte",
+                "BACK 10.",
+                "% Upper/lower case ignoreras",
+                "% Detta gäller även hex-tecknen A-F i färgerna i utdata,",
+                "% det spelar ingen roll om du använder stora eller små",
+                "% bokstäver eller en blandning.",
+                "color #AbcdEF. left 70. foRW 10."
+            };
+
+            List<string> program11 = new List<string>()
+            {
+                "% Ta 8 steg framåt",
+                "REP 2 REP 4 FORW 1.",
+                "REP% Repetition på gång",
+                "2% Två gånger",
+                "\" % Snart kommer kommandon",
+                "DOWN% Kommentera mera",
+                ".% Avsluta down-kommando",
+                "FORW 1",
+                "LEFT 1. % Oj, glömde punkt efter FORW-kommando",
+                "\""
+            };
 
             try
             {
                 Lexer l = new Lexer();
 
                 #if DEBUG
-                    string preprocessed = l.FilterInput(program3);
+                    List<string> preprocessed = l.FilterInput(program6);
                 #else
-                    string input = l.GetInput();
-                    string preprocessed = l.FilterInput(input);
+                    List<string> input = l.GetInput();
+                    List<string> preprocessed = l.FilterInput(input);
                 #endif
 
                 List<Token> parsed = l.Parse(preprocessed);
