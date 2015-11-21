@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static S2.Token;
 
 namespace S2
 {
@@ -40,8 +39,8 @@ namespace S2
         {
             Token current = NextToken();
 
-            TokenType[] shortInstr = { TokenType.UP, TokenType.DOWN };
-            TokenType[] regInstr = { TokenType.LEFT, TokenType.RIGHT, TokenType.FORW, TokenType.BACK };
+            Token.TokenType[] shortInstr = { Token.TokenType.UP, Token.TokenType.DOWN };
+            Token.TokenType[] regInstr = { Token.TokenType.LEFT, Token.TokenType.RIGHT, Token.TokenType.FORW, Token.TokenType.BACK };
 
             // Handle short instructions, i.e. UP. and DOWN.
             if (shortInstr.Contains(current.type))
@@ -57,20 +56,20 @@ namespace S2
                 Console.WriteLine("Parsed " + current.type + " instruction.");
                 return true;
             }
-            else if (current.type.Equals(TokenType.COLOR))
+            else if (current.type.Equals(Token.TokenType.COLOR))
             {
                 output.Add(HandleColor(current));
                 Console.WriteLine("Parsed " + current.type + " instruction.");
                 return true;
             }
-            else if (current.type.Equals(TokenType.REP))
+            else if (current.type.Equals(Token.TokenType.REP))
             {
                 Console.WriteLine("Begin REP parsing");
                 output.Add(HandleRep(current));
                 Console.WriteLine("REP parsed");
                 return true;
             }
-            else if (current.type.Equals(TokenType.WHITESPACE))
+            else if (current.type.Equals(Token.TokenType.WHITESPACE))
             {
                 return true;
             }
@@ -84,10 +83,10 @@ namespace S2
         {
             Token next = NextToken();
 
-            if (next.type.Equals(TokenType.WHITESPACE))
+            if (next.type.Equals(Token.TokenType.WHITESPACE))
                 next = NextToken();
 
-            if (next.type.Equals(TokenType.DOT))
+            if (next.type.Equals(Token.TokenType.DOT))
                 return new Instruction(current.type);
             else
                 throw new SyntaxError(current.lineNum, "Expected DOT token after INSTR + whitespace, got " + next.type);
@@ -98,16 +97,16 @@ namespace S2
             Token next = NextToken();
 
             // Has to contain a whitespace
-            if (!next.type.Equals(TokenType.WHITESPACE))
+            if (!next.type.Equals(Token.TokenType.WHITESPACE))
                 throw new SyntaxError(current.lineNum, "Expected WHITESPACE token after INSTR, got " + next.type);
 
             next = NextToken();
 
             // Followed by a number
-            if (!next.type.Equals(TokenType.NUMBER))
+            if (!next.type.Equals(Token.TokenType.NUMBER))
                 throw new SyntaxError(next.lineNum, "Expected number after whitespace token, got " + next.type);
 
-            if (NextToken().type.Equals(TokenType.DOT))
+            if (NextToken().type.Equals(Token.TokenType.DOT))
                 return new Instruction(current.type, (int) next.num);
             else
                 throw new SyntaxError(current.lineNum, "Expected DOT token at the end of instruction, got " + next.type);
@@ -118,17 +117,17 @@ namespace S2
             Token next = NextToken();
 
             // Has to contain a whitespace
-            if (!next.type.Equals(TokenType.WHITESPACE))
+            if (!next.type.Equals(Token.TokenType.WHITESPACE))
                 throw new SyntaxError(current.lineNum, "Expected whitespace after color token, got " + next.type);
 
             next = NextToken();
 
             // Followed by a number
-            if (!next.type.Equals(TokenType.HEX))
+            if (!next.type.Equals(Token.TokenType.HEX))
                 throw new SyntaxError(next.lineNum, "Expected hex token after whitespace, got " + next.type);
 
-            if (NextToken().type.Equals(TokenType.DOT))
-                return new Instruction(TokenType.COLOR, next.hex);
+            if (NextToken().type.Equals(Token.TokenType.DOT))
+                return new Instruction(Token.TokenType.COLOR, next.hex);
             else
                 throw new SyntaxError(current.lineNum, "Expected dot after hex token, got " + next.type);
         }
@@ -138,45 +137,51 @@ namespace S2
             Token next = NextToken();
 
             // Has to contain a whitespace
-            if (!next.type.Equals(TokenType.WHITESPACE))
-                throw new SyntaxError(next.lineNum, "Whitespace expected after REP token");
+            if (!next.type.Equals(Token.TokenType.WHITESPACE))
+                throw new SyntaxError(next.lineNum, "Whitespace expected after REP token, got " + next.type);
 
             next = NextToken();
 
             // Has to contain a number
-            if (!next.type.Equals(TokenType.NUMBER))
-                throw new SyntaxError(next.lineNum, "Number expected after REP + whitespace");
+            if (!next.type.Equals(Token.TokenType.NUMBER))
+                throw new SyntaxError(next.lineNum, "Number expected after REP + whitespace, got " + next.type);
 
             int num = next.num;
             next = NextToken();
 
-            if (!next.type.Equals(TokenType.WHITESPACE))
-                throw new SyntaxError(next.lineNum, "Whitespace expected after REP number");
+            if (!next.type.Equals(Token.TokenType.WHITESPACE))
+                throw new SyntaxError(next.lineNum, "Whitespace expected after REP number, got " + next.type);
 
-
+            // Get the token determining REP type
             var determinator = PeekToken();
 
-            // TODO: Handle 
-            if (determinator.type.Equals(TokenType.QUOTE))
+            // Look at the determinator token to see whether one or multiple instructions
+            // should be repeated
+            if (determinator.type.Equals(Token.TokenType.QUOTE))
             {
-                NextToken(); // Eat up the quote
-                // As long as the 
+                // Eat up the determinator quote
+                NextToken();
+                
+                // Parse statements recursively
+                // This will run until it encounters a quote token, once it does the Statement()
+                // command will fail, thus kicking back here
                 var recursiveList = new List<Instruction>();
                 StatementList(recursiveList);
 
+                // By now, other code will have swallowed our expected quote, so we have to peek back
                 next = tokens.ElementAt(currentToken - 1);
 
-                if (!next.type.Equals(TokenType.QUOTE))
+                if (!next.type.Equals(Token.TokenType.QUOTE))
                     throw new SyntaxError(PeekToken().lineNum, "Quote expected after REP statements, got " + PeekToken().type);
 
-                return new Instruction(TokenType.REP, num, recursiveList);
+                return new Instruction(Token.TokenType.REP, num, recursiveList);
                 // recursion
             }
             else
             {
                 List<Instruction> rep = new List<Instruction>();
                 Statement(rep);
-                return new Instruction(TokenType.REP, num, rep);
+                return new Instruction(Token.TokenType.REP, num, rep);
             }
         }
 

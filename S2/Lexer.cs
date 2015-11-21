@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using System.Text.RegularExpressions;
-using static S2.Token;
 
 namespace S2
 {
@@ -84,42 +83,42 @@ namespace S2
 				{
 					case "DOWN":
                         Console.WriteLine("Recognized DOWN token on line " + lineNum);
-						tokens.Add(new Token(lineNum, TokenType.DOWN));
+						tokens.Add(new Token(lineNum, Token.TokenType.DOWN));
 						break;
 					case "UP":
                         Console.WriteLine("Recognized UP token on line " + lineNum);
-                        tokens.Add(new Token(lineNum, TokenType.UP));
+                        tokens.Add(new Token(lineNum, Token.TokenType.UP));
                         break;
                     case "FORW":
-                        tokens.Add(new Token(lineNum, TokenType.FORW));
+                        tokens.Add(new Token(lineNum, Token.TokenType.FORW));
                         Console.WriteLine("Recognized FORW token on line " + lineNum);
                         break;
                     case "BACK":
-                        tokens.Add(new Token(lineNum, TokenType.BACK));
+                        tokens.Add(new Token(lineNum, Token.TokenType.BACK));
                         Console.WriteLine("Recognized BACK token on line " + lineNum);
                         break;
                     case "LEFT":
-                        tokens.Add(new Token(lineNum, TokenType.LEFT));
+                        tokens.Add(new Token(lineNum, Token.TokenType.LEFT));
                         Console.WriteLine("Recognized LEFT token on line " + lineNum);
                         break;
                     case "RIGHT":
-                        tokens.Add(new Token(lineNum, TokenType.RIGHT));
+                        tokens.Add(new Token(lineNum, Token.TokenType.RIGHT));
                         Console.WriteLine("Recognized RIGHT token on line " + lineNum);
                         break;
                     case "COLOR":
-                        tokens.Add(new Token(lineNum, TokenType.COLOR));
+                        tokens.Add(new Token(lineNum, Token.TokenType.COLOR));
                         Console.WriteLine("Recognized COLOR token on line " + lineNum);
                         break;
                     case "REP":
-                        tokens.Add(new Token(lineNum, TokenType.REP));
+                        tokens.Add(new Token(lineNum, Token.TokenType.REP));
                         Console.WriteLine("Recognized REP token on line " + lineNum);
                         break;
                     case ".":
-                        tokens.Add(new Token(lineNum, TokenType.DOT));
+                        tokens.Add(new Token(lineNum, Token.TokenType.DOT));
                         Console.WriteLine("Recognized DOT token on line " + lineNum);
                         break;
                     case @"""":
-                        tokens.Add(new Token(lineNum, TokenType.QUOTE));
+                        tokens.Add(new Token(lineNum, Token.TokenType.QUOTE));
                         Console.WriteLine("Recognized QUOTE token on line " + lineNum);
                         break;
                     case @"\n":
@@ -135,14 +134,14 @@ namespace S2
                         if (int.TryParse(m.Value, out val))
                         {
                             Console.WriteLine("Recognized NUMBER token on line " + lineNum);
-                            tokens.Add(new Token(lineNum, TokenType.NUMBER, val));
+                            tokens.Add(new Token(lineNum, Token.TokenType.NUMBER, val));
                         }
                         // A seven character string, starting with #, is a hex color code
                         // match of our hex regex pattern
                         else if (m.Value.StartsWith("#") && m.Value.Length == 7)
                         {
                             Console.WriteLine("Recognized HEX token on line " + lineNum);
-                            tokens.Add(new Token(lineNum, TokenType.HEX, m.Value));
+                            tokens.Add(new Token(lineNum, Token.TokenType.HEX, m.Value));
                         }
                         // A matched value which is null or whitespace and is not null
                         // is whitespace
@@ -156,7 +155,7 @@ namespace S2
                             else
                             {
                                 Console.WriteLine("Recognized WHITESPACE token on line " + lineNum);
-                                tokens.Add(new Token(lineNum, TokenType.WHITESPACE));
+                                tokens.Add(new Token(lineNum, Token.TokenType.WHITESPACE));
                             }
                         }
                         // The matcher has encountered unknown data
