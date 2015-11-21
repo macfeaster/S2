@@ -33,18 +33,29 @@ namespace S2
                                 "  #111111." + Environment.NewLine +
                                 "REP 1 BACK 1." + Environment.NewLine;
 
-            Console.WriteLine("FORW 1. LEFT 90.\n".IndexOf('\n'));
+            string program3 = "% Nästlad loop 1" + Environment.NewLine +
+                                "REP 2 \"UP.FORW 10.DOWN.REP 3 \"LEFT 120. FORW 1.\"\"" + Environment.NewLine +
+                                "% Nästlad loop 2" + Environment.NewLine +
+                                "REP 3 \"REP 2 \"RIGHT 2. FORW 1.\"" + Environment.NewLine +
+                                "       COLOR #FF0000. FORW 10. COLOR #0000FF.\"" + Environment.NewLine +
+                                "% COLOR #000000. % Bortkommenterat färgbyte" + Environment.NewLine +
+                                "BACK 10." + Environment.NewLine +
+                                "% Upper/lower case ignoreras" + Environment.NewLine +
+                                "% Detta gäller även hex-tecknen A-F i färgerna i utdata," + Environment.NewLine +
+                                "% det spelar ingen roll om du använder stora eller små" + Environment.NewLine +
+                                "% bokstäver eller en blandning." + Environment.NewLine +
+                                "color #AbcdEF. left 70. foRW 10." + Environment.NewLine;
 
             /* try
             {*/
                 Lexer l = new Lexer();
-                string preprocessed = l.FilterInput(program2);
+                string preprocessed = l.FilterInput(program3);
                 List<Token> parsed = l.Parse(preprocessed);
 
                 Parser p = new Parser(parsed);
                 List<Instruction> tree = p.GetTree();
 
-            Console.WriteLine(string.Join(", ", tree));
+            Console.WriteLine(string.Join(Environment.NewLine, tree));
             /* }
             catch (SyntaxError e)
             {

@@ -75,7 +75,7 @@ namespace S2
                 return true;
             }
 
-            Console.WriteLine("Could not parse " + current.type + " instruction.");
+            Console.WriteLine("Could not parse " + current.type + " instruction at index " + currentToken + ".");
 
             return false;
         }
@@ -147,21 +147,24 @@ namespace S2
             if (!next.type.Equals(TokenType.NUMBER))
                 throw new SyntaxError(next.lineNum, "Number expected after REP + whitespace");
 
+            int num = next.num;
             next = NextToken();
 
             if (!next.type.Equals(TokenType.WHITESPACE))
                 throw new SyntaxError(next.lineNum, "Whitespace expected after REP number");
 
-            int num = next.num;
 
             var determinator = PeekToken();
 
             // TODO: Handle 
             if (determinator.type.Equals(TokenType.QUOTE))
             {
+                NextToken(); // Eat up the quote
                 // As long as the 
                 var recursiveList = new List<Instruction>();
                 StatementList(recursiveList);
+
+                next = tokens.ElementAt(currentToken - 1);
 
                 if (!next.type.Equals(TokenType.QUOTE))
                     throw new SyntaxError(PeekToken().lineNum, "Quote expected after REP statements, got " + PeekToken().type);

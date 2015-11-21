@@ -55,9 +55,9 @@ namespace S2
 
             if (subInstr != null)
                 sb
-                    .Append(Environment.NewLine + "<<")
+                    .Append(@"  [")
                     .Append(string.Join(", ", subInstr))
-                    .Append(">>" + Environment.NewLine);
+                    .Append("]");
 
             sb.Append(">");
 
