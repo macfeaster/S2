@@ -125,7 +125,7 @@ namespace S2
                 Lexer l = new Lexer();
 
                 #if DEBUG
-                    List<string> preprocessed = l.FilterInput(program6);
+                    List<string> preprocessed = l.FilterInput(program8);
                 #else
                     List<string> input = l.GetInput();
                     List<string> preprocessed = l.FilterInput(input);

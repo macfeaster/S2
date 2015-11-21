@@ -42,9 +42,12 @@ namespace S2
             Token.TokenType[] shortInstr = { Token.TokenType.UP, Token.TokenType.DOWN };
             Token.TokenType[] regInstr = { Token.TokenType.LEFT, Token.TokenType.RIGHT, Token.TokenType.FORW, Token.TokenType.BACK };
 
+            Log.Debug("Beginning parse of " + current);
+
             // Handle short instructions, i.e. UP. and DOWN.
             if (shortInstr.Contains(current.type))
             {
+                Log.Debug("Called " + current.type + " parser.");
                 output.Add(HandleShort(current));
                 Log.Debug("Parsed " + current.type + " instruction.");
                 return true;
@@ -52,6 +55,7 @@ namespace S2
             // Handle regular instructions, i.e. LEFT 2, FORW 10.
             else if (regInstr.Contains(current.type))
             {
+                Log.Debug("Called " + current.type + " parser.");
                 output.Add(HandleReg(current));
                 Log.Debug("Parsed " + current.type + " instruction.");
                 return true;
@@ -59,6 +63,7 @@ namespace S2
             // Handle COLOR instructions
             else if (current.type.Equals(Token.TokenType.COLOR))
             {
+                Log.Debug("Called " + current.type + " parser.");
                 output.Add(HandleColor(current));
                 Log.Debug("Parsed " + current.type + " instruction.");
                 return true;
