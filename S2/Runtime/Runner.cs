@@ -22,32 +22,32 @@ namespace S2
             {
                 switch (i.Type)
                 {
-                    case Token.TokenType.UP:
-                        Log.Debug("Pen is now UP");
+                    case Token.TokenType.Up:
+                        Log.Debug("Pen is now Up");
                         _penDown = false;
                         break;
-                    case Token.TokenType.DOWN:
-                        Log.Debug("Pen is now DOWN");
+                    case Token.TokenType.Down:
+                        Log.Debug("Pen is now Down");
                         _penDown = true;
                         break;
-                    case Token.TokenType.FORW:
-                    case Token.TokenType.BACK:
+                    case Token.TokenType.Forw:
+                    case Token.TokenType.Back:
                         Log.Debug("Calling DrawLine()");
                         DrawLine(i);
                         break;
-                    case Token.TokenType.LEFT:
+                    case Token.TokenType.Left:
                         _angle += i.Num;
                         Log.Debug("Turned left " + i.Num + " degrees, _angle is now " + _angle);
                         break;
-                    case Token.TokenType.RIGHT:
+                    case Token.TokenType.Right:
                         _angle -= i.Num;
                         Log.Debug("Turned right " + i.Num + " degrees, _angle is now " + _angle);
                         break;
-                    case Token.TokenType.COLOR:
+                    case Token.TokenType.Color:
                         Log.Debug("Changed pen color to " + i.Hex);
                         _penColor = i.Hex;
                         break;
-                    case Token.TokenType.REP:
+                    case Token.TokenType.Rep:
                         for (var j = 0; j < i.Num; j++)
                             Run(i.SubInstr);
                         break;
@@ -64,12 +64,12 @@ namespace S2
             double x2, y2;
             var d = i.Num;
 
-            if (i.Type.Equals(Token.TokenType.FORW))
+            if (i.Type.Equals(Token.TokenType.Forw))
             {
                 x2 = x1 + d * Math.Cos(Math.PI * _angle / 180);
                 y2 = y1 + d * Math.Sin(Math.PI * _angle / 180);
             }
-            else if (i.Type.Equals(Token.TokenType.BACK))
+            else if (i.Type.Equals(Token.TokenType.Back))
             {
                 x2 = x1 - d * Math.Cos(Math.PI * _angle / 180);
                 y2 = y1 - d * Math.Sin(Math.PI * _angle / 180);

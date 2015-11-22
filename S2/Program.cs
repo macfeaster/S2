@@ -15,55 +15,55 @@ namespace S2
             {
                 "% Det här är en kommentar",
                 "% Nu ritar vi en kvadrat",
-                "DOWN.",
-                "FORW 1. LEFT 90.",
-                "FORW 1. LEFT 90.",
-                "FORW 1. LEFT 90.",
-                "FORW 1. LEFT 90."
+                "Down.",
+                "Forw 1. Left 90.",
+                "Forw 1. Left 90.",
+                "Forw 1. Left 90.",
+                "Forw 1. Left 90."
             };
 
             List<string> program2 = new List<string>()
             {
                 "% Space runt punkt valfritt.",
-                "DOWN  . UP.DOWN.  DOWN.",
+                "Down  . Up.Down.  Down.",
                 "% Rader kan vara tomma",
                 "",
                 "% radbrytning/space/tabb för",
                 "% att göra koden mer läslig.",
-                "REP 3 \"COLOR #FF0000.",
-                "       FORW 1. LEFT 10.",
-                "       COLOR #000000.",
-                "       FORW 2. LEFT 20.\"",
+                "Rep 3 \"Color #FF0000.",
+                "       Forw 1. Left 10.",
+                "       Color #000000.",
+                "       Forw 2. Left 20.\"",
                 "% Eller oläslig",
-                "           COLOR",
+                "           Color",
                 "% färgval på gång",
                 "  #111111.",
-                "REP 1 BACK 1."
+                "Rep 1 Back 1."
             };
 
             List<string> program3 = new List<string>()
             {
                 "% Syntaxfel: felaktig färgsyntax",
-                "COLOR 05AB34.",
-                "FORW 1."
+                "Color 05AB34.",
+                "Forw 1."
             };
 
             List<string> program4 = new List<string>()
             {
                 "% Oavslutad loop",
-                "REP 5 \"DOWN. FORW 1. LEFT 10."
+                "Rep 5 \"Down. Forw 1. Left 10."
             };
 
             List<string> program5 = new List<string>()
             {
                 "% Syntaxfel: ej heltal",
-                "FORW 2,3."
+                "Forw 2,3."
             };
 
             List<string> program6 = new List<string>()
             {
                 "%&(CDH*(",
-                "FORW",
+                "Forw",
                 "#123456.",
                 "& C(*N & (*#NRC"
             };
@@ -72,13 +72,13 @@ namespace S2
             {
                 "% Måste vara whitespace mellan",
                 "% kommando och parameter",
-                "DOWN.COLOR#000000."
+                "Down.Color#000000."
             };
 
             List<string> program8 = new List<string>()
             {
                 "% Syntaxfel: saknas punkt.",
-                "DOWN ",
+                "Down ",
                 "% Om filen tar slut mitt i ett kommando",
                 "% så anses felet ligga på sista raden ",
                 "   % i filen där det förekom någon kod"
@@ -87,20 +87,20 @@ namespace S2
             List<string> program9 = new List<string>()
             {
                 "% Måste vara space mellan argument",
-                "REP  5\"FORW 1.\"",
+                "Rep  5\"Forw 1.\"",
                 "% Detta inte OK heller",
-                "REP   5FORW 1."
+                "Rep   5FORW 1."
             };
 
             List<string> program10 = new List<string>()
             {
                 "% Nästlad loop 1",
-                "REP 2 \"UP.FORW 10.DOWN.REP 3 \"LEFT 120. FORW 1.\"\"",
+                "Rep 2 \"Up.Forw 10.Down.Rep 3 \"Left 120. Forw 1.\"\"",
                 "% Nästlad loop 2",
-                "REP 3 \"REP 2 \"RIGHT 2. FORW 1.\"",
-                "       COLOR #FF0000. FORW 10. COLOR #0000FF.\"",
-                "% COLOR #000000. % Bortkommenterat färgbyte",
-                "BACK -10.",
+                "Rep 3 \"Rep 2 \"Right 2. Forw 1.\"",
+                "       Color #FF0000. Forw 10. Color #0000FF.\"",
+                "% Color #000000. % Bortkommenterat färgbyte",
+                "Back -10.",
                 "% Upper/lower case ignoreras",
                 "% Detta gäller även Hex-tecknen A-F i färgerna i utdata,",
                 "% det spelar ingen roll om du använder stora eller små",
@@ -111,14 +111,14 @@ namespace S2
             List<string> program11 = new List<string>()
             {
                 "% Ta 8 steg framåt",
-                "REP 2 REP 4 FORW 1.",
-                "REP% Repetition på gång",
+                "Rep 2 Rep 4 Forw 1.",
+                "Rep% Repetition på gång",
                 "2% Två gånger",
                 "\" % Snart kommer kommandon",
-                "DOWN% Kommentera mera",
+                "Down% Kommentera mera",
                 ".% Avsluta down-kommando",
-                "FORW 1",
-                "LEFT 1. % Oj, glömde punkt efter FORW-kommando",
+                "Forw 1",
+                "Left 1. % Oj, glömde punkt efter Forw-kommando",
                 "\""
             };
 
@@ -134,7 +134,7 @@ namespace S2
 
             var program26 = new List<string>()
             {
-                "UP.",
+                "Up.",
                 "FO",
                 "RW 100."
             };
@@ -142,19 +142,19 @@ namespace S2
 		    var program28 = new List<string>()
 		    {
 		        "% Oavslutad loop",
-		        "REP 5 \"DOWN. FORW 1. LEFT 10.",
-                "LEFT 10."
+		        "Rep 5 \"Down. Forw 1. Left 10.",
+                "Left 10."
 		    };
 
 		    var program31 = new List<string>()
 		    {
-		        "#ABCEEF 03 REP 4 #EFEFEF 3."
+		        "#ABCEEF 03 Rep 4 #EFEFEF 3."
 		    };
 
 		    var program34 = new List<string>
 		    {
-                "UP. DOWN.",
-                "DOWN.."
+                "Up. Down.",
+                "Down.."
             };
 
             try

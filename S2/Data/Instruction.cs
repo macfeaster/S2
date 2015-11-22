@@ -14,7 +14,7 @@ namespace S2
         public List<Instruction> SubInstr { get; private set; }
 
         /// <summary>
-        /// Container for short instruction types (UP, DOWN)
+        /// Container for short instruction types (Up, Down)
         /// </summary>
         public Instruction(Token.TokenType type)
         {
@@ -22,7 +22,7 @@ namespace S2
         }
 
         /// <summary>
-        /// Container for regular instruction types (FORW 2, LEFT 90, etc.)
+        /// Container for regular instruction types (Forw 2, Left 90, etc.)
         /// </summary>
         public Instruction(Token.TokenType type, int num)
         {
@@ -31,7 +31,7 @@ namespace S2
         }
 
         /// <summary>
-        /// Container for COLOR instruction.
+        /// Container for Color instruction.
         /// </summary>
         public Instruction(Token.TokenType type, string hex)
         {
@@ -40,7 +40,7 @@ namespace S2
         }
 
         /// <summary>
-        /// Container for REP instruction, with sub instruction set.
+        /// Container for Rep instruction, with sub instruction set.
         /// </summary>
         public Instruction(Token.TokenType type, int num, List<Instruction> subInstr)
         {
