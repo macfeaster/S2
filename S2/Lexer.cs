@@ -64,7 +64,7 @@ namespace S2
 		public List<Token> Parse(List<string> input)
 		{
             // Set up regex tools
-			var pattern = @"(DOWN|UP|FORW|BACK|LEFT|RIGHT|COLOR|REP|[0-9]+|[#][0-9A-F]{6}|[.]|""|(\r|\n|\r\n)|\s+)";
+			var pattern = @"(DOWN|UP|FORW|BACK|LEFT|RIGHT|COLOR|REP|[0-9]+|[#][0-9A-F]{6}|[.]|""|\s+)";
 			var r = new Regex(pattern);
 
             // Parsed tokens are placed in a list, lineCount keeps track of which line errors occur on
@@ -157,6 +157,9 @@ namespace S2
                                 throw new SyntaxError(lineNum, "Encountered unknown data: " + m.Value);
                             break;
 				    }
+
+                    if (lexPos + m.Value.Length != m.Index + m.Value.Length)
+                        throw new SyntaxError(lineNum, "Jumped a symbol: " + line.Substring(lexPos, m.Index - lexPos));
 
                     lexPos = m.Index + m.Value.Length;
 			    }

@@ -67,30 +67,30 @@ namespace S2
             double x2, y2;
             int d = i.num;
 
+            if (i.type.Equals(Token.TokenType.FORW))
+            {
+                x2 = x1 + d * Math.Cos(Math.PI * angle / 180);
+                y2 = y1 + d * Math.Sin(Math.PI * angle / 180);
+            }
+            else if (i.type.Equals(Token.TokenType.BACK))
+            {
+                x2 = x1 - d * Math.Cos(Math.PI * angle / 180);
+                y2 = y1 - d * Math.Sin(Math.PI * angle / 180);
+            }
+            else
+                x2 = y2 = 0;
+
+            x = x2;
+            y = y2;
+
             if (penDown)
             {
-                if (i.type.Equals(Token.TokenType.FORW))
-                {
-                    x2 = x1 + d * Math.Cos(Math.PI * angle / 180);
-                    y2 = y1 + d * Math.Sin(Math.PI * angle / 180);
-                }
-                else if (i.type.Equals(Token.TokenType.BACK))
-                {
-                    x2 = x1 - d * Math.Cos(Math.PI * angle / 180);
-                    y2 = y1 - d * Math.Sin(Math.PI * angle / 180);
-                }
-                else
-                    x2 = y2 = 0;
-
                 Console.WriteLine(
                     string.Format(
                         "{0} {1:0.0000} {2:0.0000} {3:0.0000} {4:0.0000}",
                         penColor, x1, y1, x2, y2
                     )
                 );
-
-                x = x2;
-                y = y2;
             }
         }
     }

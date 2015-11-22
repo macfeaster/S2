@@ -105,9 +105,9 @@ namespace S2
 
         private Instruction HandleShort(Token current)
         {
-            Token next = NextToken();
+            Token next = null;
 
-            Expect(Token.TokenType.DOT, " at end of instruction", ref next);
+            Expect(Token.TokenType.DOT, " at end of " + current + " instruction", ref next);
             return new Instruction(current.type);
         }
 
@@ -122,9 +122,7 @@ namespace S2
             Expect(Token.TokenType.NUMBER, "after whitespace token", ref next);
             int num = next.num;
 
-            next = NextToken();
-
-            Expect(Token.TokenType.DOT, " at end of instruction", ref next);
+            Expect(Token.TokenType.DOT, " at end of " + current + " instruction", ref next);
             return new Instruction(current.type, num);
         }
 
@@ -139,7 +137,7 @@ namespace S2
             Expect(Token.TokenType.HEX, "after whitespace", ref next);
             string hex = next.hex;
 
-            Expect(Token.TokenType.DOT, " at end of instruction", ref next);
+            Expect(Token.TokenType.DOT, " at end of " + current + " instruction", ref next);
             return new Instruction(Token.TokenType.COLOR, hex);
         }
 
@@ -211,6 +209,7 @@ namespace S2
         public void Expect(Token.TokenType type, string message, ref Token next)
         {
             next = NextToken();
+            Token initial = next;
 
             // If we're not specifically expecting whitespace, we can safely ignore any such
             if (!type.Equals(Token.TokenType.WHITESPACE))
@@ -218,12 +217,16 @@ namespace S2
                 while (next.type.Equals(Token.TokenType.WHITESPACE))
                 {
                     Log.Debug("---> Not expecting whitespace, expecting " + type + ", ignored whitespace token " + next + " at line " + next.lineNum);
-                    next = NextToken();
+
+                    if (HasMoreTokens())
+                        next = NextToken();
+                    else
+                        throw new SyntaxError(initial.lineNum, "No valid continuation of " + initial.type + " token");
                 }
             }
 
             if (!next.type.Equals(type))
-                throw new SyntaxError(next.lineNum, "Expected " + type + " " + message + ", got " + next.type + " at line " + next.lineNum);
+                throw new SyntaxError(next.lineNum, "Expected " + type + " " + message.Trim() + ", got " + next.type + " at line " + next.lineNum);
         }
 
         public bool HasMoreTokens()

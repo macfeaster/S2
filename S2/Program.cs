@@ -99,7 +99,7 @@ namespace S2
                 "REP 3 \"REP 2 \"RIGHT 2. FORW 1.\"",
                 "       COLOR #FF0000. FORW 10. COLOR #0000FF.\"",
                 "% COLOR #000000. % Bortkommenterat färgbyte",
-                "BACK 10.",
+                "BACK -10.",
                 "% Upper/lower case ignoreras",
                 "% Detta gäller även hex-tecknen A-F i färgerna i utdata,",
                 "% det spelar ingen roll om du använder stora eller små",
@@ -126,7 +126,7 @@ namespace S2
                 Lexer l = new Lexer();
 
                 #if DEBUG
-                    List<string> preprocessed = l.FilterInput(program7);
+                    List<string> preprocessed = l.FilterInput(program10);
                 #else
                     List<string> input = l.GetInput();
                     List<string> preprocessed = l.FilterInput(input);

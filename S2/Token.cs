@@ -18,7 +18,11 @@ namespace S2
 		{
             this.lineNum = lineNum;
 			this.type = type;
-			this.num = num;
+
+            if (num != 0)
+                this.num = num;
+            else
+                throw new SyntaxError(lineNum, "Parameter value cannot be zero");
             hex = null;
 		}
 
@@ -40,7 +44,7 @@ namespace S2
 
         public override string ToString()
         {
-            return type.ToString();
+            return lineNum + ": " + type.ToString();
         }
     }
 }
