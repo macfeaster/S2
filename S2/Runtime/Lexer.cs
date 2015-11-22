@@ -63,7 +63,7 @@ namespace S2
         }
 
         /// <summary>
-        /// Parse an input string into a ListDictionary of Tokens.
+        /// Parse an input string into a List of Tokens.
         /// </summary>
 		public List<Token> Parse(List<string> input)
 		{
