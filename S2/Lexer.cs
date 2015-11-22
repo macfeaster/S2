@@ -155,7 +155,6 @@ namespace S2
                             // The matcher has encountered unknown data
                             else
                                 _tokens.Add(new Token(lineNum, Token.TokenType.INVALID));
-                                // throw new SyntaxError(lineNum, "Encountered unknown data: " + m.Value);
                             break;
 				    }
 
@@ -163,7 +162,6 @@ namespace S2
                     {
                         _tokens.Add(new Token(lineNum, Token.TokenType.INVALID));
                         Log.Debug("Jumped a symbol" + line.Substring(lexPos, m.Index - lexPos));
-                        // throw new SyntaxError(lineNum, "Jumped a symbol: " + line.Substring(lexPos, m.Index - lexPos));
                         break;
                     }
 

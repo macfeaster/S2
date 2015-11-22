@@ -20,7 +20,7 @@ namespace S2
             if (!HasMoreTokens())
                 throw new SyntaxError(1, "No tokens to parse");
 
-            StatementList(instructions);
+            StatementList(instructions, false);
 
             if (HasMoreTokens())
                 throw new SyntaxError(tokens.Last().lineNum, "Tokens left after parsing completed, unexpected token " + PeekToken());
@@ -31,13 +31,13 @@ namespace S2
             return instructions;
         }
 
-        private void StatementList(List<Instruction> output)
+        private void StatementList(List<Instruction> output, bool inRecursion)
         {
-            bool statementParsed = Statement(output);
+            bool statementParsed = Statement(output, inRecursion);
 
             if (HasMoreTokens() && statementParsed)
             {
-                StatementList(output);
+                StatementList(output, inRecursion);
             }
             else
             {
@@ -49,13 +49,13 @@ namespace S2
             }
         }
 
-        private bool Statement(List<Instruction> output)
+        private bool Statement(List<Instruction> output, bool inRecursion)
         {
             Token current = NextToken();
 
             Token.TokenType[] shortInstr = { Token.TokenType.UP, Token.TokenType.DOWN };
             Token.TokenType[] regInstr = { Token.TokenType.LEFT, Token.TokenType.RIGHT, Token.TokenType.FORW, Token.TokenType.BACK };
-            Token.TokenType[] illegalInstr = { Token.TokenType.INVALID, Token.TokenType.NUMBER };
+            Token.TokenType[] illegalInstr = { Token.TokenType.INVALID, Token.TokenType.NUMBER, Token.TokenType.HEX };
 
             Log.Debug("Beginning parse of " + current);
 
@@ -100,6 +100,13 @@ namespace S2
             else if (current.type.Equals(Token.TokenType.WHITESPACE))
             {
                 return true;
+            }
+            else if (current.type.Equals(Token.TokenType.QUOTE))
+            {
+                if (inRecursion)
+                    return false;
+                else
+                    throw new SyntaxError(current.lineNum, "Quote not allowed here");
             }
             else
             {
@@ -185,14 +192,17 @@ namespace S2
                 // once it does the Statement(), command will fail, thus kicking back here
                 var recursiveList = new List<Instruction>();
                 Log.Debug("----> Begin REP recursion ...");
-                StatementList(recursiveList);
+                StatementList(recursiveList, true);
                 Log.Debug("----> Ended REP recursion, parsed " + recursiveList.Count + " statements");
 
                 // By now, other code will have swallowed our expected quote, so we have to peek back
                 next = tokens.ElementAt(currentToken - 1);
 
                 if (!next.type.Equals(Token.TokenType.QUOTE))
-                    throw new SyntaxError(PeekToken().lineNum, "Quote expected after REP statements, got " + PeekToken().type);
+                {
+                    Log.Debug("Quote expected after REP statements");
+                    throw new SyntaxError(tokens.ElementAt(currentToken - 2).lineNum, "Quote expected after REP statements, got " + next.type);
+                }    
 
                 return new Instruction(Token.TokenType.REP, num, recursiveList);
             }
@@ -200,7 +210,7 @@ namespace S2
             {
                 // To repeat a single instruction, just make a single statement parse
                 List<Instruction> rep = new List<Instruction>();
-                Statement(rep);
+                Statement(rep, true);
                 return new Instruction(Token.TokenType.REP, num, rep);
             }
         }

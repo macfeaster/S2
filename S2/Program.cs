@@ -138,12 +138,29 @@ namespace S2
                 "RW 100."
             };
 
+		    var program28 = new List<string>()
+		    {
+		        "% Oavslutad loop",
+		        "REP 5 \"DOWN. FORW 1. LEFT 10.",
+                "LEFT 10."
+		    };
+
+		    var program31 = new List<string>()
+		    {
+		        "#ABCEEF 03 REP 4 #EFEFEF 3."
+		    };
+
+		    var program33 = new List<string>
+		    {
+
+		    };
+
             try
             {
                 var l = new Lexer();
 
                 #if DEBUG
-                    var preprocessed = l.FilterInput(program26);
+                    var preprocessed = l.FilterInput(program31);
                 #else
                     List<string> input = l.GetInput();
                     List<string> preprocessed = l.FilterInput(input);
