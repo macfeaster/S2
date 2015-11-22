@@ -1,11 +1,17 @@
-﻿using System;
+﻿// Lexer.cs
+// Part of the KTH course DD1361 Programming Paradigms lab S2
+// Authors: Alice Heavey and Mauritz Zachrisson
+
+using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace S2
 {
+    /// <summary>
+    /// Converts a List of string elements to Token objects.
+    /// </summary>
     internal class Lexer
 	{
         private List<Token> _tokens;
@@ -13,7 +19,6 @@ namespace S2
         /// <summary>
         /// Get input from stdin and build a string of it.
         /// </summary>
-        /// <returns>Stdin input as string</returns>
 		public List<string> GetInput()
 		{
             var input = new List<string>();
@@ -28,20 +33,23 @@ namespace S2
 			return input;
 		}
 
+        /// <summary>
+        /// Filter every line of an input List, by removing code comments and upper-casing it.
+        /// </summary>
         public List<string> FilterInput(List<string> input)
         {
-            List<string> output = new List<string>();
+            var output = new List<string>();
 
-            foreach (string line in input)
+            foreach (var line in input)
             {
                 // Check whether line has a comment
                 string filteredLine;
-                int commentIndex = line.IndexOf("%");
+                var commentIndex = line.IndexOf("%");
 
                 // Chop off lines with trailing comments
-                // Replace comment lines with empty lines
                 if (commentIndex > 0)
                     filteredLine = line.Substring(0, commentIndex);
+                // Replace comment lines with empty lines
                 else if (commentIndex == 0)
                     filteredLine = "";
                 else
@@ -57,10 +65,6 @@ namespace S2
         /// <summary>
         /// Parse an input string into a ListDictionary of Tokens.
         /// </summary>
-        /// 
-        /// <param name="input">Code string to parse</param>
-        /// <returns>ListDictionary of parsed _tokens, with line number as key, and
-        /// the Tokens that line contains in a List, as value.</returns>
 		public List<Token> Parse(List<string> input)
 		{
             // Set up regex tools
@@ -71,12 +75,11 @@ namespace S2
             _tokens = new List<Token>();
             var lineNum = 0;
 
-            foreach (string line in input)
+            foreach (var line in input)
             { 
 			    var matches = r.Matches(line);
                 lineNum++;
-
-                int lexPos = 0;
+                var lexPos = 0;
 
 			    foreach (Match m in matches)
 			    {
@@ -158,6 +161,8 @@ namespace S2
                             break;
 				    }
 
+                    // If the lexer jumped a symbol, we encountered something that could not be tokenized,
+                    // and should be regarded as an Invalid token
                     if (lexPos + m.Value.Length != m.Index + m.Value.Length)
                     {
                         _tokens.Add(new Token(lineNum, Token.TokenType.Invalid));
@@ -168,8 +173,10 @@ namespace S2
                     lexPos = m.Index + m.Value.Length;
                 }
 
+                // A new line is viewed by the language spec as whitespace, so add one
                 _tokens.Add(new Token(lineNum, Token.TokenType.Whitespace));
 
+                // If the line contained something, but the matcher returned nothing, the whole line is invalid
                 if (line.Length > 0 && matches.Count == 0)
                 {
                     Log.Debug("Jumped a line: " + line);
