@@ -162,7 +162,7 @@ namespace S2
                 var l = new Lexer();
 
                 #if DEBUG
-                    var preprocessed = l.FilterInput(program34);
+                    var preprocessed = l.FilterInput(program);
                 #else
                     List<string> input = l.GetInput();
                     List<string> preprocessed = l.FilterInput(input);

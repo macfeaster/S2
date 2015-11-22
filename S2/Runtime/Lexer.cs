@@ -68,7 +68,7 @@ namespace S2
 		public List<Token> Parse(List<string> input)
 		{
             // Set up regex tools
-			var pattern = @"(Down|Up|Forw|Back|Left|Right|Color|Rep|[0-9]+|[#][0-9A-F]{6}|[.]|""|\s+)";
+			var pattern = @"(DOWN|UP|FORW|BACK|LEFT|RIGHT|COLOR|REP|[0-9]+|[#][0-9A-F]{6}|[.]|""|\s+)";
 			var r = new Regex(pattern);
 
             // Parsed _tokens are placed in a list, lineCount keeps track of which line errors occur on
@@ -86,35 +86,35 @@ namespace S2
                     // Match regex string pattern matches with their token equivalents
                     switch (m.Value)
 				    {
-					    case "Down":
+					    case "DOWN":
                             Log.Debug("Recognized Down token on line " + lineNum);
 						    _tokens.Add(new Token(lineNum, Token.TokenType.Down));
 						    break;
-					    case "Up":
+					    case "UP":
                             Log.Debug("Recognized Up token on line " + lineNum);
                             _tokens.Add(new Token(lineNum, Token.TokenType.Up));
                             break;
-                        case "Forw":
+                        case "FORW":
                             _tokens.Add(new Token(lineNum, Token.TokenType.Forw));
                             Log.Debug("Recognized Forw token on line " + lineNum);
                             break;
-                        case "Back":
+                        case "BACK":
                             _tokens.Add(new Token(lineNum, Token.TokenType.Back));
                             Log.Debug("Recognized Back token on line " + lineNum);
                             break;
-                        case "Left":
+                        case "LEFT":
                             _tokens.Add(new Token(lineNum, Token.TokenType.Left));
                             Log.Debug("Recognized Left token on line " + lineNum);
                             break;
-                        case "Right":
+                        case "RIGHT":
                             _tokens.Add(new Token(lineNum, Token.TokenType.Right));
                             Log.Debug("Recognized Right token on line " + lineNum);
                             break;
-                        case "Color":
+                        case "COLOR":
                             _tokens.Add(new Token(lineNum, Token.TokenType.Color));
                             Log.Debug("Recognized Color token on line " + lineNum);
                             break;
-                        case "Rep":
+                        case "REP":
                             _tokens.Add(new Token(lineNum, Token.TokenType.Rep));
                             Log.Debug("Recognized Rep token on line " + lineNum);
                             break;
