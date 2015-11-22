@@ -150,17 +150,18 @@ namespace S2
 		        "#ABCEEF 03 REP 4 #EFEFEF 3."
 		    };
 
-		    var program33 = new List<string>
+		    var program34 = new List<string>
 		    {
-
-		    };
+                "UP. DOWN.",
+                "DOWN.."
+            };
 
             try
             {
                 var l = new Lexer();
 
                 #if DEBUG
-                    var preprocessed = l.FilterInput(program31);
+                    var preprocessed = l.FilterInput(program34);
                 #else
                     List<string> input = l.GetInput();
                     List<string> preprocessed = l.FilterInput(input);

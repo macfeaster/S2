@@ -55,7 +55,7 @@ namespace S2
 
             Token.TokenType[] shortInstr = { Token.TokenType.UP, Token.TokenType.DOWN };
             Token.TokenType[] regInstr = { Token.TokenType.LEFT, Token.TokenType.RIGHT, Token.TokenType.FORW, Token.TokenType.BACK };
-            Token.TokenType[] illegalInstr = { Token.TokenType.INVALID, Token.TokenType.NUMBER, Token.TokenType.HEX };
+            Token.TokenType[] illegalInstr = { Token.TokenType.INVALID, Token.TokenType.NUMBER, Token.TokenType.HEX, Token.TokenType.DOT };
 
             Log.Debug("Beginning parse of " + current);
 
