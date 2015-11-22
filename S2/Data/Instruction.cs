@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿// Instruction.cs
+// Part of the KTH course DD1361 Programming Paradigms lab S2
+// Authors: Alice Heavey and Mauritz Zachrisson
+
+using System.Collections.Generic;
 using System.Text;
 
 namespace S2
