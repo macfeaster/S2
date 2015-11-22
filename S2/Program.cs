@@ -102,7 +102,7 @@ namespace S2
                 "% COLOR #000000. % Bortkommenterat färgbyte",
                 "BACK -10.",
                 "% Upper/lower case ignoreras",
-                "% Detta gäller även hex-tecknen A-F i färgerna i utdata,",
+                "% Detta gäller även Hex-tecknen A-F i färgerna i utdata,",
                 "% det spelar ingen roll om du använder stora eller små",
                 "% bokstäver eller en blandning.",
                 "color #AbcdEF. left 70. foRW 10."

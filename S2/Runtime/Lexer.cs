@@ -124,7 +124,7 @@ namespace S2
                             Log.Debug("Recognized QUOTE token on line " + lineNum);
                             break;
 
-                        // Token has to be either a number or a hex value
+                        // Token has to be either a number or a Hex value
                         default:
                             // Capture numeric value, if possible
                             // If numeric, add a NUMBER token
@@ -134,8 +134,8 @@ namespace S2
                                 Log.Debug("Recognized NUMBER token on line " + lineNum);
                                 _tokens.Add(new Token(lineNum, Token.TokenType.NUMBER, val));
                             }
-                            // A seven character string, starting with #, is a hex color code
-                            // match of our hex regex pattern
+                            // A seven character string, starting with #, is a Hex color code
+                            // match of our Hex regex pattern
                             else if (m.Value.StartsWith(@"#") && m.Value.Length == 7)
                             {
                                 Log.Debug("Recognized HEX token on line " + lineNum);

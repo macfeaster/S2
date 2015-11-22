@@ -1,37 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace S2
 {
-    class Runner
+    internal class Runner
     {
-        bool penDown = false;
-        string penColor = "#0000FF";
-        double x = 0;
-        double y = 0;
-        int angle = 0;
+        private bool _penDown;
+        private string _penColor = "#0000FF";
+        private double _x;
+        private double _y;
+        private int _angle;
 
         public Runner(List<Instruction> tree)
         {
             Run(tree);
         }
 
-        public void Run(List<Instruction> tree)
+        private void Run(List<Instruction> tree)
         {
-            foreach (Instruction i in tree)
+            foreach (var i in tree)
             {
-                switch (i.type)
+                switch (i.Type)
                 {
                     case Token.TokenType.UP:
                         Log.Debug("Pen is now UP");
-                        penDown = false;
+                        _penDown = false;
                         break;
                     case Token.TokenType.DOWN:
                         Log.Debug("Pen is now DOWN");
-                        penDown = true;
+                        _penDown = true;
                         break;
                     case Token.TokenType.FORW:
                     case Token.TokenType.BACK:
@@ -39,20 +36,20 @@ namespace S2
                         DrawLine(i);
                         break;
                     case Token.TokenType.LEFT:
-                        angle += i.num;
-                        Log.Debug("Turned left " + i.num + " degrees, angle is now " + angle);
+                        _angle += i.Num;
+                        Log.Debug("Turned left " + i.Num + " degrees, _angle is now " + _angle);
                         break;
                     case Token.TokenType.RIGHT:
-                        angle -= i.num;
-                        Log.Debug("Turned right " + i.num + " degrees, angle is now " + angle);
+                        _angle -= i.Num;
+                        Log.Debug("Turned right " + i.Num + " degrees, _angle is now " + _angle);
                         break;
                     case Token.TokenType.COLOR:
-                        Log.Debug("Changed pen color to " + i.hex);
-                        penColor = i.hex;
+                        Log.Debug("Changed pen color to " + i.Hex);
+                        _penColor = i.Hex;
                         break;
                     case Token.TokenType.REP:
-                        for (int j = 0; j < i.num; j++)
-                            Run(i.subInstr);
+                        for (var j = 0; j < i.Num; j++)
+                            Run(i.SubInstr);
                         break;
                     default:
                         throw new SyntaxError("Unknown instruction encountered");
@@ -60,37 +57,32 @@ namespace S2
             }
         }
 
-        public void DrawLine(Instruction i)
+        private void DrawLine(Instruction i)
         {
-            double x1 = x;
-            double y1 = y;
+            var x1 = _x;
+            var y1 = _y;
             double x2, y2;
-            int d = i.num;
+            var d = i.Num;
 
-            if (i.type.Equals(Token.TokenType.FORW))
+            if (i.Type.Equals(Token.TokenType.FORW))
             {
-                x2 = x1 + d * Math.Cos(Math.PI * angle / 180);
-                y2 = y1 + d * Math.Sin(Math.PI * angle / 180);
+                x2 = x1 + d * Math.Cos(Math.PI * _angle / 180);
+                y2 = y1 + d * Math.Sin(Math.PI * _angle / 180);
             }
-            else if (i.type.Equals(Token.TokenType.BACK))
+            else if (i.Type.Equals(Token.TokenType.BACK))
             {
-                x2 = x1 - d * Math.Cos(Math.PI * angle / 180);
-                y2 = y1 - d * Math.Sin(Math.PI * angle / 180);
+                x2 = x1 - d * Math.Cos(Math.PI * _angle / 180);
+                y2 = y1 - d * Math.Sin(Math.PI * _angle / 180);
             }
             else
                 x2 = y2 = 0;
 
-            x = x2;
-            y = y2;
+            _x = x2;
+            _y = y2;
 
-            if (penDown)
+            if (_penDown)
             {
-                Console.WriteLine(
-                    string.Format(
-                        "{0} {1:0.0000} {2:0.0000} {3:0.0000} {4:0.0000}",
-                        penColor, x1, y1, x2, y2
-                    )
-                );
+                Console.WriteLine("{0} {1:0.0000} {2:0.0000} {3:0.0000} {4:0.0000}", _penColor, x1, y1, x2, y2);
             }
         }
     }
