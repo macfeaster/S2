@@ -1,17 +1,19 @@
-﻿// Authors: Alice Heavey and Mauritz Zachrisson
+﻿// Program.cs
+// Part of the KTH course DD1361 Programming Paradigms lab S2
+// Authors: Alice Heavey and Mauritz Zachrisson
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace S2
 {
-    class Program
+    static class Program
 	{
-		static void Main(string[] args)
+		public static void Main(string[] args)
 		{
-            List<string> program = new List<string>()
+            // Test code for debug runs, ignored in production scenarios
+            #region Test Code
+            var program = new List<string>()
             {
                 "% Det här är en kommentar",
                 "% Nu ritar vi en kvadrat",
@@ -22,7 +24,7 @@ namespace S2
                 "Forw 1. Left 90."
             };
 
-            List<string> program2 = new List<string>()
+            var program2 = new List<string>()
             {
                 "% Space runt punkt valfritt.",
                 "Down  . Up.Down.  Down.",
@@ -41,26 +43,26 @@ namespace S2
                 "Rep 1 Back 1."
             };
 
-            List<string> program3 = new List<string>()
+            var program3 = new List<string>()
             {
                 "% Syntaxfel: felaktig färgsyntax",
                 "Color 05AB34.",
                 "Forw 1."
             };
 
-            List<string> program4 = new List<string>()
+            var program4 = new List<string>()
             {
                 "% Oavslutad loop",
                 "Rep 5 \"Down. Forw 1. Left 10."
             };
 
-            List<string> program5 = new List<string>()
+            var program5 = new List<string>()
             {
                 "% Syntaxfel: ej heltal",
                 "Forw 2,3."
             };
 
-            List<string> program6 = new List<string>()
+            var program6 = new List<string>()
             {
                 "%&(CDH*(",
                 "Forw",
@@ -68,14 +70,14 @@ namespace S2
                 "& C(*N & (*#NRC"
             };
 
-            List<string> program7 = new List<string>()
+            var program7 = new List<string>()
             {
                 "% Måste vara whitespace mellan",
                 "% kommando och parameter",
                 "Down.Color#000000."
             };
 
-            List<string> program8 = new List<string>()
+            var program8 = new List<string>()
             {
                 "% Syntaxfel: saknas punkt.",
                 "Down ",
@@ -84,7 +86,7 @@ namespace S2
                 "   % i filen där det förekom någon kod"
             };
 
-            List<string> program9 = new List<string>()
+            var program9 = new List<string>()
             {
                 "% Måste vara space mellan argument",
                 "Rep  5\"Forw 1.\"",
@@ -92,7 +94,7 @@ namespace S2
                 "Rep   5FORW 1."
             };
 
-            List<string> program10 = new List<string>()
+            var program10 = new List<string>()
             {
                 "% Nästlad loop 1",
                 "Rep 2 \"Up.Forw 10.Down.Rep 3 \"Left 120. Forw 1.\"\"",
@@ -108,7 +110,7 @@ namespace S2
                 "color #AbcdEF. left 70. foRW 10."
             };
 
-            List<string> program11 = new List<string>()
+            var program11 = new List<string>()
             {
                 "% Ta 8 steg framåt",
                 "Rep 2 Rep 4 Forw 1.",
@@ -122,7 +124,7 @@ namespace S2
                 "\""
             };
 
-            List<string> program23 = new List<string>()
+            var program23 = new List<string>()
             {
                 "#*Ä¤*ÖÄ*%&Ä#&*JYco1hjmtHCaq03bzIm4" +
                 "8UzxhBeJSd" +
@@ -157,10 +159,16 @@ namespace S2
                 "Down.."
             };
 
+            #endregion
+
+            // Try to run the program, catching any SyntaxErrors happening along the
+            // way, printing them out to the command line
             try
             {
                 var l = new Lexer();
 
+                // Debug a selected program, or get the input from stdin in production
+                // Pre-process the input by removing code comments
                 #if DEBUG
                     var preprocessed = l.FilterInput(program);
                 #else
@@ -168,12 +176,16 @@ namespace S2
                     List<string> preprocessed = l.FilterInput(input);
                 #endif
 
+                // Lex the pre-processed data into tokens
                 var parsed = l.Parse(preprocessed);
 
                 #if DEBUG
                     Console.WriteLine(string.Join(Environment.NewLine, parsed));
                 #endif
 
+                // Parse tokens into an instruction tree, where Instructions
+                // are supplied in a list, and sub-lists of instructions branch
+                // out from the main line
                 var p = new Parser(parsed);
                 var tree = p.GetTree();
 
@@ -181,8 +193,8 @@ namespace S2
                     Console.WriteLine(string.Join(Environment.NewLine, tree));
                 #endif
 
+                // Run the instruction tree
                 var r = new Runner(tree);
-
             }
             catch (SyntaxError e)
             {
