@@ -52,7 +52,7 @@ namespace S2
                             Run(i.SubInstr);
                         break;
                     default:
-                        throw new SyntaxError("Unknown instruction encountered");
+                        throw new SyntaxError(0, "Unknown instruction encountered");
                 }
             }
         }
