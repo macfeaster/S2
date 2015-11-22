@@ -57,15 +57,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Instruction.cs" />
-    <Compile Include="Lexer.cs" />
-    <Compile Include="Log.cs" />
-    <Compile Include="Parser.cs" />
+    <Compile Include="Data\Instruction.cs" />
+    <Compile Include="Runtime\Lexer.cs" />
+    <Compile Include="Util\Log.cs" />
+    <Compile Include="Runtime\Parser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Runner.cs" />
-    <Compile Include="SyntaxError.cs" />
-    <Compile Include="Token.cs" />
+    <Compile Include="Runtime\Runner.cs" />
+    <Compile Include="Util\SyntaxError.cs" />
+    <Compile Include="Data\Token.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
