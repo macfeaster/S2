@@ -61,7 +61,7 @@ namespace S2
 
             List<string> program6 = new List<string>()
             {
-                @"%&(CDH*(",
+                "%&(CDH*(",
                 "FORW",
                 "#123456.",
                 "& C(*N & (*#NRC"
@@ -121,31 +121,48 @@ namespace S2
                 "\""
             };
 
+            List<string> program23 = new List<string>()
+            {
+                "#*Ä¤*ÖÄ*%&Ä#&*JYco1hjmtHCaq03bzIm4" +
+                "8UzxhBeJSd" +
+                "9u8KdzHJUR" +
+                "RitD8GbTWE" +
+                "j2tkkrRxA3" +
+                "f1gtbFgPJ6"
+            };
+
+            var program26 = new List<string>()
+            {
+                "UP.",
+                "FO",
+                "RW 100."
+            };
+
             try
             {
-                Lexer l = new Lexer();
+                var l = new Lexer();
 
                 #if DEBUG
-                    List<string> preprocessed = l.FilterInput(program10);
+                    var preprocessed = l.FilterInput(program26);
                 #else
                     List<string> input = l.GetInput();
                     List<string> preprocessed = l.FilterInput(input);
                 #endif
 
-                List<Token> parsed = l.Parse(preprocessed);
+                var parsed = l.Parse(preprocessed);
 
                 #if DEBUG
                     Console.WriteLine(string.Join(Environment.NewLine, parsed));
                 #endif
 
-                Parser p = new Parser(parsed);
-                List<Instruction> tree = p.GetTree();
+                var p = new Parser(parsed);
+                var tree = p.GetTree();
 
                 #if DEBUG
                     Console.WriteLine(string.Join(Environment.NewLine, tree));
                 #endif
 
-                Runner r = new Runner(tree);
+                var r = new Runner(tree);
 
             }
             catch (SyntaxError e)

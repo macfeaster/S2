@@ -16,10 +16,14 @@ namespace S2
         public Parser(List<Token> tokens)
         {
             this.tokens = tokens;
+
+            if (!HasMoreTokens())
+                throw new SyntaxError(1, "No tokens to parse");
+
             StatementList(instructions);
 
             if (HasMoreTokens())
-                throw new SyntaxError("Tokens left after parsing completed, unexpected token " + PeekToken());
+                throw new SyntaxError(tokens.Last().lineNum, "Tokens left after parsing completed, unexpected token " + PeekToken());
         }
 
         public List<Instruction> GetTree()
@@ -51,11 +55,16 @@ namespace S2
 
             Token.TokenType[] shortInstr = { Token.TokenType.UP, Token.TokenType.DOWN };
             Token.TokenType[] regInstr = { Token.TokenType.LEFT, Token.TokenType.RIGHT, Token.TokenType.FORW, Token.TokenType.BACK };
+            Token.TokenType[] illegalInstr = { Token.TokenType.INVALID, Token.TokenType.NUMBER };
 
             Log.Debug("Beginning parse of " + current);
 
+            if (illegalInstr.Contains(current.type))
+            {
+                throw new SyntaxError(current.lineNum, "Encountered illegal token");
+            }
             // Handle short instructions, i.e. UP. and DOWN.
-            if (shortInstr.Contains(current.type))
+            else if (shortInstr.Contains(current.type))
             {
                 Log.Debug("--> Called " + current.type + " parser.");
                 output.Add(HandleShort(current));
@@ -91,10 +100,6 @@ namespace S2
             else if (current.type.Equals(Token.TokenType.WHITESPACE))
             {
                 return true;
-            }
-            else if (current.type.Equals(Token.TokenType.INVALID))
-            {
-                throw new SyntaxError(current.lineNum, "Encountered illegal token");
             }
             else
             {

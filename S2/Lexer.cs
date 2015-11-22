@@ -6,9 +6,9 @@ using System.Text.RegularExpressions;
 
 namespace S2
 {
-    class Lexer
+    internal class Lexer
 	{
-        List<Token> tokens;
+        private List<Token> _tokens;
 
         /// <summary>
         /// Get input from stdin and build a string of it.
@@ -16,7 +16,7 @@ namespace S2
         /// <returns>Stdin input as string</returns>
 		public List<string> GetInput()
 		{
-            List<string> input = new List<string>();
+            var input = new List<string>();
 			string line;
 
             // Read all input, even empty lines and whitespaces
@@ -59,7 +59,7 @@ namespace S2
         /// </summary>
         /// 
         /// <param name="input">Code string to parse</param>
-        /// <returns>ListDictionary of parsed tokens, with line number as key, and
+        /// <returns>ListDictionary of parsed _tokens, with line number as key, and
         /// the Tokens that line contains in a List, as value.</returns>
 		public List<Token> Parse(List<string> input)
 		{
@@ -67,8 +67,8 @@ namespace S2
 			var pattern = @"(DOWN|UP|FORW|BACK|LEFT|RIGHT|COLOR|REP|[0-9]+|[#][0-9A-F]{6}|[.]|""|\s+)";
 			var r = new Regex(pattern);
 
-            // Parsed tokens are placed in a list, lineCount keeps track of which line errors occur on
-            tokens = new List<Token>();
+            // Parsed _tokens are placed in a list, lineCount keeps track of which line errors occur on
+            _tokens = new List<Token>();
             var lineNum = 0;
 
             foreach (string line in input)
@@ -85,42 +85,42 @@ namespace S2
 				    {
 					    case "DOWN":
                             Log.Debug("Recognized DOWN token on line " + lineNum);
-						    tokens.Add(new Token(lineNum, Token.TokenType.DOWN));
+						    _tokens.Add(new Token(lineNum, Token.TokenType.DOWN));
 						    break;
 					    case "UP":
                             Log.Debug("Recognized UP token on line " + lineNum);
-                            tokens.Add(new Token(lineNum, Token.TokenType.UP));
+                            _tokens.Add(new Token(lineNum, Token.TokenType.UP));
                             break;
                         case "FORW":
-                            tokens.Add(new Token(lineNum, Token.TokenType.FORW));
+                            _tokens.Add(new Token(lineNum, Token.TokenType.FORW));
                             Log.Debug("Recognized FORW token on line " + lineNum);
                             break;
                         case "BACK":
-                            tokens.Add(new Token(lineNum, Token.TokenType.BACK));
+                            _tokens.Add(new Token(lineNum, Token.TokenType.BACK));
                             Log.Debug("Recognized BACK token on line " + lineNum);
                             break;
                         case "LEFT":
-                            tokens.Add(new Token(lineNum, Token.TokenType.LEFT));
+                            _tokens.Add(new Token(lineNum, Token.TokenType.LEFT));
                             Log.Debug("Recognized LEFT token on line " + lineNum);
                             break;
                         case "RIGHT":
-                            tokens.Add(new Token(lineNum, Token.TokenType.RIGHT));
+                            _tokens.Add(new Token(lineNum, Token.TokenType.RIGHT));
                             Log.Debug("Recognized RIGHT token on line " + lineNum);
                             break;
                         case "COLOR":
-                            tokens.Add(new Token(lineNum, Token.TokenType.COLOR));
+                            _tokens.Add(new Token(lineNum, Token.TokenType.COLOR));
                             Log.Debug("Recognized COLOR token on line " + lineNum);
                             break;
                         case "REP":
-                            tokens.Add(new Token(lineNum, Token.TokenType.REP));
+                            _tokens.Add(new Token(lineNum, Token.TokenType.REP));
                             Log.Debug("Recognized REP token on line " + lineNum);
                             break;
                         case ".":
-                            tokens.Add(new Token(lineNum, Token.TokenType.DOT));
+                            _tokens.Add(new Token(lineNum, Token.TokenType.DOT));
                             Log.Debug("Recognized DOT token on line " + lineNum);
                             break;
                         case @"""":
-                            tokens.Add(new Token(lineNum, Token.TokenType.QUOTE));
+                            _tokens.Add(new Token(lineNum, Token.TokenType.QUOTE));
                             Log.Debug("Recognized QUOTE token on line " + lineNum);
                             break;
 
@@ -132,14 +132,14 @@ namespace S2
                             if (int.TryParse(m.Value, out val))
                             {
                                 Log.Debug("Recognized NUMBER token on line " + lineNum);
-                                tokens.Add(new Token(lineNum, Token.TokenType.NUMBER, val));
+                                _tokens.Add(new Token(lineNum, Token.TokenType.NUMBER, val));
                             }
                             // A seven character string, starting with #, is a hex color code
                             // match of our hex regex pattern
                             else if (m.Value.StartsWith(@"#") && m.Value.Length == 7)
                             {
                                 Log.Debug("Recognized HEX token on line " + lineNum);
-                                tokens.Add(new Token(lineNum, Token.TokenType.HEX, m.Value));
+                                _tokens.Add(new Token(lineNum, Token.TokenType.HEX, m.Value));
                             }
                             // A matched value which is null or whitespace and is not null
                             // is whitespace
@@ -150,28 +150,46 @@ namespace S2
                                         ", ",
                                         m.Value.ToCharArray().Select(i => (int)i)
                                     ) + " on line " + (lineNum));
-                                tokens.Add(new Token(lineNum, Token.TokenType.WHITESPACE));
+                                _tokens.Add(new Token(lineNum, Token.TokenType.WHITESPACE));
                             }
                             // The matcher has encountered unknown data
                             else
-                                throw new SyntaxError(lineNum, "Encountered unknown data: " + m.Value);
+                                _tokens.Add(new Token(lineNum, Token.TokenType.INVALID));
+                                // throw new SyntaxError(lineNum, "Encountered unknown data: " + m.Value);
                             break;
 				    }
 
                     if (lexPos + m.Value.Length != m.Index + m.Value.Length)
-                        throw new SyntaxError(lineNum, "Jumped a symbol: " + line.Substring(lexPos, m.Index - lexPos));
+                    {
+                        _tokens.Add(new Token(lineNum, Token.TokenType.INVALID));
+                        Log.Debug("Jumped a symbol" + line.Substring(lexPos, m.Index - lexPos));
+                        // throw new SyntaxError(lineNum, "Jumped a symbol: " + line.Substring(lexPos, m.Index - lexPos));
+                        break;
+                    }
 
                     lexPos = m.Index + m.Value.Length;
-			    }
+                }
 
-                tokens.Add(new Token(lineNum, Token.TokenType.WHITESPACE));
+                _tokens.Add(new Token(lineNum, Token.TokenType.WHITESPACE));
+
+                if (line.Length > 0 && matches.Count == 0)
+                {
+                    Log.Debug("Jumped a line: " + line);
+                    _tokens.Add(new Token(lineNum, Token.TokenType.INVALID));
+                    break;
+                }
 
                 // If there is still unparsed data, there is something illegal that cannot be lexed
                 if (lexPos != line.Length)
-                    tokens.Add(new Token(lineNum, Token.TokenType.INVALID));
+                {
+                    var last = _tokens.Last();
+                    Log.Debug("Added invalid token on line " + last.lineNum);
+                    _tokens.Add(new Token(last.lineNum, Token.TokenType.INVALID));
+                    break;
+                }
             }
 
-            return tokens;
+            return _tokens;
 		}
 	}
 }
