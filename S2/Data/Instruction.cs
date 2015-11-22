@@ -3,6 +3,9 @@ using System.Text;
 
 namespace S2
 {
+    /// <summary>
+    /// Represents a single instruction, with or without parameters.
+    /// </summary>
     internal class Instruction
     {
         public Token.TokenType Type { get; private set; }
@@ -11,26 +14,34 @@ namespace S2
         public List<Instruction> SubInstr { get; private set; }
 
         /// <summary>
-        /// UP and DOWN instruction containers.
+        /// Container for short instruction types (UP, DOWN)
         /// </summary>
-        /// <param name="type"></param>
         public Instruction(Token.TokenType type)
         {
             Type = type;
         }
 
+        /// <summary>
+        /// Container for regular instruction types (FORW 2, LEFT 90, etc.)
+        /// </summary>
         public Instruction(Token.TokenType type, int num)
         {
             Type = type;
             Num = num;
         }
 
+        /// <summary>
+        /// Container for COLOR instruction.
+        /// </summary>
         public Instruction(Token.TokenType type, string hex)
         {
             Type = type;
             Hex = hex;
         }
 
+        /// <summary>
+        /// Container for REP instruction, with sub instruction set.
+        /// </summary>
         public Instruction(Token.TokenType type, int num, List<Instruction> subInstr)
         {
             Type = type;
