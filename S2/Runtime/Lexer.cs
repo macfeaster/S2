@@ -13,25 +13,25 @@ namespace S2
     /// Converts a List of string elements to Token objects.
     /// </summary>
     internal class Lexer
-	{
+    {
         private List<Token> _tokens;
 
         /// <summary>
         /// Get input from stdin and build a string of it.
         /// </summary>
-		public List<string> GetInput()
-		{
+        public List<string> GetInput()
+        {
             var input = new List<string>();
-			string line;
+            string line;
 
             // Read all input, even empty lines and whitespaces
-			while ((line = Console.ReadLine()) != null)
-			{
+            while ((line = Console.ReadLine()) != null)
+            {
                 input.Add(line);
-			}
+            }
 
-			return input;
-		}
+            return input;
+        }
 
         /// <summary>
         /// Filter every line of an input List, by removing code comments and upper-casing it.
@@ -65,11 +65,11 @@ namespace S2
         /// <summary>
         /// Parse an input string into a List of Tokens.
         /// </summary>
-		public List<Token> Parse(List<string> input)
-		{
+        public List<Token> Parse(List<string> input)
+        {
             // Set up regex tools
-			var pattern = @"(DOWN|UP|FORW|BACK|LEFT|RIGHT|COLOR|REP|[0-9]+|[#][0-9A-F]{6}|[.]|""|\s+)";
-			var r = new Regex(pattern);
+            var pattern = @"(DOWN|UP|FORW|BACK|LEFT|RIGHT|COLOR|REP|[0-9]+|[#][0-9A-F]{6}|[.]|""|\s+)";
+            var r = new Regex(pattern);
 
             // Parsed _tokens are placed in a list, lineCount keeps track of which line errors occur on
             _tokens = new List<Token>();
@@ -77,20 +77,20 @@ namespace S2
 
             foreach (var line in input)
             { 
-			    var matches = r.Matches(line);
+                var matches = r.Matches(line);
                 lineNum++;
                 var lexPos = 0;
 
-			    foreach (Match m in matches)
-			    {
+                foreach (Match m in matches)
+                {
                     // Match regex string pattern matches with their token equivalents
                     switch (m.Value)
-				    {
-					    case "DOWN":
+                    {
+                        case "DOWN":
                             Log.Debug("Recognized Down token on line " + lineNum);
-						    _tokens.Add(new Token(lineNum, Token.TokenType.Down));
-						    break;
-					    case "UP":
+                            _tokens.Add(new Token(lineNum, Token.TokenType.Down));
+                            break;
+                        case "UP":
                             Log.Debug("Recognized Up token on line " + lineNum);
                             _tokens.Add(new Token(lineNum, Token.TokenType.Up));
                             break;
@@ -159,7 +159,7 @@ namespace S2
                             else
                                 _tokens.Add(new Token(lineNum, Token.TokenType.Invalid));
                             break;
-				    }
+                    }
 
                     // If the lexer jumped a symbol, we encountered something that could not be tokenized,
                     // and should be regarded as an Invalid token
@@ -195,6 +195,6 @@ namespace S2
             }
 
             return _tokens;
-		}
-	}
+        }
+    }
 }

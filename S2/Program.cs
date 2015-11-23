@@ -8,9 +8,9 @@ using System.Collections.Generic;
 namespace S2
 {
     static class Program
-	{
-		public static void Main(string[] args)
-		{
+    {
+        public static void Main(string[] args)
+        {
             // Test code for debug runs, ignored in production scenarios
             #region Test Code
             var program = new List<string>()
@@ -141,20 +141,20 @@ namespace S2
                 "RW 100."
             };
 
-		    var program28 = new List<string>()
-		    {
-		        "% Oavslutad loop",
-		        "Rep 5 \"Down. Forw 1. Left 10.",
+            var program28 = new List<string>()
+            {
+                "% Oavslutad loop",
+                "Rep 5 \"Down. Forw 1. Left 10.",
                 "Left 10."
-		    };
+            };
 
-		    var program31 = new List<string>()
-		    {
-		        "#ABCEEF 03 Rep 4 #EFEFEF 3."
-		    };
+            var program31 = new List<string>()
+            {
+                "#ABCEEF 03 Rep 4 #EFEFEF 3."
+            };
 
-		    var program34 = new List<string>
-		    {
+            var program34 = new List<string>
+            {
                 "Up. Down.",
                 "Down.."
             };
@@ -205,5 +205,5 @@ namespace S2
                 Console.ReadLine();
             #endif
         }
-	}
+    }
 }
